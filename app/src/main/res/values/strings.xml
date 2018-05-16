@@ -1,0 +1,10 @@
+<resources>
+    
+    <string name="app_name">Hallyu</string>
+    
+    <string name="menu.navigation.posts">Посты</string>
+    <string name="menu.navigation.dictionaryAndOther">Словарь и прочее</string>
+    <string name="menu.navigation.lessons">Уроки</string>
+    <string name="menu.navigation.profile">Профиль</string>
+    
+</resources>
