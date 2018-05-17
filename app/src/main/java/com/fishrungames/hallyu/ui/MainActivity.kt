@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_PROFILE = "fragmentProfile"
     private val FRAGMENT_NUMERAL_TEST = "fragmentNumeralTest"
 
+    private var bottomNavigationFragments: MutableList<String> = mutableListOf()
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_posts -> {
@@ -51,6 +53,28 @@ class MainActivity : AppCompatActivity() {
 
         replaceToPostsFragment()
 
+        bottomNavigationFragments.add(FRAGMENT_POSTS)
+        bottomNavigationFragments.add(FRAGMENT_DICTIONARY)
+        bottomNavigationFragments.add(FRAGMENT_OTHER)
+        bottomNavigationFragments.add(FRAGMENT_PROFILE)
+
+    }
+
+    override fun onBackPressed() {
+
+        val backStackCount = supportFragmentManager.backStackEntryCount
+
+        if (backStackCount <= 0) {
+            moveTaskToBack(true)
+            return
+        }
+
+        val fragment = supportFragmentManager.fragments[backStackCount - 1]
+        fragment.onResume()
+
+        val currentFragmentBackStack = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
+
+        super.onBackPressed()
     }
 
     fun hideInputMethod() {
@@ -93,12 +117,30 @@ class MainActivity : AppCompatActivity() {
         ft.commit()
     }
 
-    fun openNumeralTestFragment() {
+    fun openNumeralTestFragment(testType: Int) {
         val numeralTestFragment = NumeralTestFragment()
+        val bundle = Bundle()
+        bundle.putInt("testType", testType)
+        numeralTestFragment.arguments = bundle
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-//        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, numeralTestFragment, FRAGMENT_NUMERAL_TEST).addToBackStack(FRAGMENT_NUMERAL_TEST)
         ft.commit()
+    }
+
+    fun setBottomNavigationViewState(currentFragmentTag: String?) {
+        if (currentFragmentTag != null && bottomNavigationFragments.contains(currentFragmentTag)) {
+            updateBottomNavigationViewState(true)
+        } else {
+            updateBottomNavigationViewState(false)
+        }
+    }
+
+    private fun updateBottomNavigationViewState(show: Boolean) {
+        val visible = if (show) View.VISIBLE else View.GONE
+        if (navigation.visibility != visible) {
+            this.runOnUiThread { navigation.visibility = visible }
+        }
     }
 
     fun showProgressBar() {

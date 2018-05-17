@@ -19,7 +19,7 @@ abstract class BaseFragment : Fragment() {
     }
 
     override fun onResume() {
-//        getActivityInstance()?.setBottomNavigationViewState(this.tag)
+        getActivityInstance()?.setBottomNavigationViewState(this.tag)
         super.onResume()
     }
 

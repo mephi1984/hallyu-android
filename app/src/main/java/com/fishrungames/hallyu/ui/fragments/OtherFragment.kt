@@ -16,8 +16,8 @@ class OtherFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        numberToTextTestButton.setOnClickListener { getActivityInstance()?.openNumeralTestFragment() }
-        textToNumberTestButton.setOnClickListener { getActivityInstance()?.openNumeralTestFragment() }
+        numberToTextTestButton.setOnClickListener { getActivityInstance()?.openNumeralTestFragment(0) }
+        textToNumberTestButton.setOnClickListener { getActivityInstance()?.openNumeralTestFragment(1) }
 
     }
 }
