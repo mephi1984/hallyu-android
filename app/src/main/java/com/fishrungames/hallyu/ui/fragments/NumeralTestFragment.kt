@@ -153,6 +153,9 @@ class NumeralTestFragment : BaseFragment() {
 
     private val getNumeralTestQuestionCallback = object : Callback<NumeralTestQuestionResponse> {
         override fun onResponse(call: Call<NumeralTestQuestionResponse>?, response: Response<NumeralTestQuestionResponse>?) {
+            if (activity == null) {
+                return
+            }
             getActivityInstance()?.hideProgressBar()
             if (response?.body()?.haveQuestion()!!) {
                 question = response.body()?.question!!
@@ -161,6 +164,9 @@ class NumeralTestFragment : BaseFragment() {
         }
 
         override fun onFailure(call: Call<NumeralTestQuestionResponse>?, t: Throwable?) {
+            if (activity == null) {
+                return
+            }
             getActivityInstance()?.hideProgressBar()
         }
 
