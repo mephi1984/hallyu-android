@@ -14,7 +14,7 @@
     <item
         android:id="@+id/navigation_lessons"
         android:icon="@mipmap/ic_lessons_24dp"
-        android:title="@string/menu.navigation.lessons" />
+        android:title="@string/menu.navigation.other" />
 
     <item
         android:id="@+id/navigation_profile"

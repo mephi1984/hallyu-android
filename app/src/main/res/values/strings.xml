@@ -4,7 +4,21 @@
     
     <string name="menu.navigation.posts">Посты</string>
     <string name="menu.navigation.dictionaryAndOther">Словарь и прочее</string>
-    <string name="menu.navigation.lessons">Уроки</string>
+    <string name="menu.navigation.other">Разное</string>
     <string name="menu.navigation.profile">Профиль</string>
+
+    <string name="text.numeralTestFragment.digitsInNumber">Разрядов в числе:\u0020</string>
+    <string name="text.numeralTestFragment.number">Число:</string>
+    <string name="text.numeralTestFragment.numberInKorean">Число на Корейском:</string>
+    <string name="text.numeralTestFragment.enterTheNumber">Введите число:</string>
+    <string name="text.numeralTestFragment.enterTheNumberInKorean">Введите число на Корейском:</string>
+    <string name="text.numeralTestFragment.right">Правльно !</string>
+    <string name="text.numeralTestFragment.wrong">Неправильно !</string>
+    <string name="text.numeralTestFragment.rightAnswer">Правильный ответ:\u0020</string>
+    <string name="text.numeralTestFragment.ok">OK</string>
+    <string name="text.numeralTestFragment.next">Далее</string>
+    <string name="text.numeralTestFragment.start">Начать</string>
+    
+    <string name="hint.numeralTestFragment.answer">Ответ</string>
     
 </resources>

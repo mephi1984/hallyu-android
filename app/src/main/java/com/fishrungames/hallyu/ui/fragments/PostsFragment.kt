@@ -33,9 +33,13 @@ class PostsFragment : BaseFragment() {
 
     private fun searchPosts() {
         getActivityInstance()?.hideInputMethod()
-        val objectAnimator = ObjectAnimator.ofFloat(searchPostsCardView, "y", searchPostsCardView.y, 0f + 25)
+        val searchPostsViewLayoutParams = searchPostsCardView.layoutParams as ViewGroup.MarginLayoutParams
+        val objectAnimator = ObjectAnimator.ofFloat(
+                searchPostsCardView,
+                "y",
+                searchPostsCardView.y,
+                0f + searchPostsViewLayoutParams.leftMargin)
         objectAnimator.duration = 200
-
         objectAnimator.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator) { }
             override fun onAnimationCancel(animation: Animator) { }

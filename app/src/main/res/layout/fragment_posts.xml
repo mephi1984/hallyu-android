@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
@@ -12,12 +12,14 @@
         android:id="@+id/searchPostsCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginRight="5dp"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <EditText
             android:id="@+id/searchPostsEditText"
@@ -25,22 +27,20 @@
             android:layout_height="wrap_content"
             android:background="@android:color/white"
             android:hint="Search"
-            android:textSize="14sp"
-            android:padding="12dp"
-            android:inputType="text"
             android:imeOptions="actionSearch"
-            />
+            android:inputType="text"
+            android:padding="12dp"
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/searchPostsImageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
             android:layout_gravity="center_vertical|end"
+            android:padding="10dp"
             android:src="@mipmap/ic_search_24dp"
-            tools:ignore="ContentDescription"
-            />
+            tools:ignore="ContentDescription" />
 
     </android.support.v7.widget.CardView>
 
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
