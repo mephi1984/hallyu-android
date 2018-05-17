@@ -1,4 +1,4 @@
-package com.fishrungames.hallyu.ui.utils
+package com.fishrungames.hallyu.utils
 
 import android.app.AlertDialog
 import android.content.Context
