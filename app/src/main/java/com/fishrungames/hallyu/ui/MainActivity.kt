@@ -50,8 +50,6 @@ class MainActivity : AppCompatActivity() {
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        supportActionBar?.hide()
-
         replaceToPostsFragment()
 
         bottomNavigationFragments.add(FRAGMENT_POSTS)

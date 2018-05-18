@@ -16,4 +16,9 @@ class ProfileFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_main)
+    }
+
 }

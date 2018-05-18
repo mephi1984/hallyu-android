@@ -21,4 +21,10 @@ class OtherFragment : BaseFragment() {
         cardTestButton.setOnClickListener { getActivityInstance()?.openCardTestFragment() }
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_main)
+    }
+
 }

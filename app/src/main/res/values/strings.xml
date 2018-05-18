@@ -1,12 +1,27 @@
 <resources>
     
-    <string name="app_name">Hallyu</string>
+    <string name="app_name">Корейская волна</string>
     
     <string name="menu.navigation.posts">Посты</string>
     <string name="menu.navigation.dictionaryAndOther">Словарь и прочее</string>
     <string name="menu.navigation.other">Разное</string>
     <string name="menu.navigation.profile">Профиль</string>
 
+    <string name="error.message.serverError">Ошибка сервера</string>
+    <string name="error.message.networkError">Ошибка сети</string>
+
+    <string name="barTitle.main">Корейская волна</string>
+    <string name="barTitle.numeralTest">Тест китайских числительных</string>
+    <string name="barTitle.cardTest">Словарный тест</string>
+
+    <string name="text.dictionaryFragment.enterWord">Введите слово или фразу на Корейском языке. Сервис подберет перевод</string>
+    <string name="text.dictionaryFragment.translate">Перевести</string>
+    <string name="text.dictionaryFragment.clear">Очистить</string>
+    <string name="text.dictionaryFragment.textInKorean">Текст на Корейском</string>
+    <string name="text.otherFragment.numeralTest">Тесты китайских числительных</string>
+    <string name="text.otherFragment.numberToTextTest">Число → текст</string>
+    <string name="text.otherFragment.textToNumberTest">Текст → число</string>
+    <string name="text.otherFragment.cardTest">Карточки-тесты</string>
     <string name="text.numeralTestFragment.digitsInNumber">Разрядов в числе:\u0020</string>
     <string name="text.numeralTestFragment.number">Число:</string>
     <string name="text.numeralTestFragment.numberInKorean">Число на Корейском:</string>
@@ -19,6 +34,8 @@
     <string name="text.numeralTestFragment.next">Далее</string>
     <string name="text.numeralTestFragment.start">Начать</string>
     <string name="text.cardTestFragment.next">Далее</string>
+
+    <string name="test">\"Сказать привет\" - В простой вежливой форме\nС дополнительной формой вежливости\n\n\"Здравствуйте\" - \n</string>
     
     <string name="hint.numeralTestFragment.answer">Ответ</string>
     

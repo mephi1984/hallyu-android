@@ -31,6 +31,11 @@ class PostsFragment : BaseFragment() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_main)
+    }
+
     private fun searchPosts() {
         getActivityInstance()?.hideInputMethod()
         val searchPostsViewLayoutParams = searchPostsCardView.layoutParams as ViewGroup.MarginLayoutParams

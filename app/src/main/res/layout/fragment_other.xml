@@ -31,7 +31,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Тесты китайских числительных"
+                android:text="@string/text.otherFragment.numeralTest"
                 android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
                 android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:text="Число → текст" />
+                android:text="@string/text.otherFragment.numberToTextTest" />
 
             <Button
                 android:id="@+id/textToNumberTestButton"
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
                 android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:text="Текст → число" />
+                android:text="@string/text.otherFragment.textToNumberTest" />
 
         </LinearLayout>
 
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
                 android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:text="Карточки-тесты" />
+                android:text="@string/text.otherFragment.cardTest" />
 
         </LinearLayout>
 

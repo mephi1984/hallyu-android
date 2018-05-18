@@ -13,6 +13,7 @@ import android.view.animation.Animation
 import com.fishrungames.hallyu.models.OnRequestChineseNumberRecognize
 import com.fishrungames.hallyu.models.requests.NumeralTestQuestionRequest
 import com.fishrungames.hallyu.models.responses.NumeralTestQuestionResponse
+import com.fishrungames.hallyu.utils.DialogUtil
 import com.fishrungames.hallyu.utils.retrofit.HallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
 import retrofit2.Call
@@ -56,6 +57,11 @@ class NumeralTestFragment : BaseFragment() {
         nextButton.setOnClickListener { getQuestion() }
         okButton.setOnClickListener { checkAnswer() }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_numeralTest)
     }
 
     private fun setDigits() {
@@ -157,9 +163,13 @@ class NumeralTestFragment : BaseFragment() {
                 return
             }
             getActivityInstance()?.hideProgressBar()
-            if (response?.body()?.haveQuestion()!!) {
-                question = response.body()?.question!!
-                showQuestion()
+            if (response?.isSuccessful!!) {
+                if (response.body()?.haveQuestion()!!) {
+                    question = response.body()?.question
+                    showQuestion()
+                }
+            } else {
+                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
             }
         }
 
@@ -168,6 +178,7 @@ class NumeralTestFragment : BaseFragment() {
                 return
             }
             getActivityInstance()?.hideProgressBar()
+            DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
         }
 
     }

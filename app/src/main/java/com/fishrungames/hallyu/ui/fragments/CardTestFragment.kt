@@ -1,6 +1,5 @@
 package com.fishrungames.hallyu.ui.fragments
 
-import android.annotation.SuppressLint
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
@@ -14,6 +13,7 @@ import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.OnRequestCard
 import com.fishrungames.hallyu.models.requests.CardTestQuestionRequest
 import com.fishrungames.hallyu.models.responses.CardTestQuestionResponse
+import com.fishrungames.hallyu.utils.DialogUtil
 import com.fishrungames.hallyu.utils.retrofit.HallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
 import kotlinx.android.synthetic.main.fragment_card_test.*
@@ -49,6 +49,11 @@ class CardTestFragment : BaseFragment() {
 
         getQuestion()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_cardTest)
     }
 
     private fun getQuestion() {
@@ -130,9 +135,13 @@ class CardTestFragment : BaseFragment() {
                 return
             }
             getActivityInstance()?.hideProgressBar()
-            if (response?.body()?.haveQuestion()!!) {
-                question = response.body()?.question
-                showQuestion()
+            if (response?.isSuccessful!!) {
+                if (response.body()?.haveQuestion()!!) {
+                    question = response.body()?.question
+                    showQuestion()
+                }
+            } else {
+                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
             }
         }
 
@@ -141,6 +150,7 @@ class CardTestFragment : BaseFragment() {
                 return
             }
             getActivityInstance()?.hideProgressBar()
+            DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
         }
 
     }
