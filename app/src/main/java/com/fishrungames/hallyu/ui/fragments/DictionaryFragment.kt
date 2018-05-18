@@ -26,7 +26,7 @@ class DictionaryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        hallyuApi = RetrofitController.getHallyuApiApi()
+        hallyuApi = RetrofitController.getHallyuApi()
 
         translateButton.setOnClickListener { translateText() }
         clearButton.setOnClickListener { clearText() }

@@ -10,8 +10,10 @@ import java.util.concurrent.TimeUnit
 object RetrofitController {
 
     private val SERVER_URL = "http://hallyu.fishrungames.com/"
+    private val NEW_SERVER_URL = "http://hallyu-backend.fishrungames.com/"
 
     private var hallyuApi: HallyuApi? = null
+    private var newHallyuApi: NewHallyuApi? = null
 
     private fun getLogging(): HttpLoggingInterceptor {
         val logging = HttpLoggingInterceptor()
@@ -28,7 +30,7 @@ object RetrofitController {
                 .build()
     }
 
-    fun getHallyuApiApi(): HallyuApi {
+    fun getHallyuApi(): HallyuApi {
         if (hallyuApi == null) {
             val gson = GsonBuilder().setLenient().create()
             val retrofit = Retrofit.Builder()
@@ -40,6 +42,20 @@ object RetrofitController {
             hallyuApi = retrofit.create(HallyuApi::class.java)
         }
         return hallyuApi!!
+    }
+
+    fun getNewHallyuApi(): NewHallyuApi {
+        if (newHallyuApi == null) {
+            val gson = GsonBuilder().setLenient().create()
+            val retrofit = Retrofit.Builder()
+                    .baseUrl(NEW_SERVER_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(getOkHttp())
+                    .build()
+
+            newHallyuApi = retrofit.create(NewHallyuApi::class.java)
+        }
+        return newHallyuApi!!
     }
 
 }

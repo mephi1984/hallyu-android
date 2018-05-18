@@ -45,7 +45,7 @@ class CardTestFragment : BaseFragment() {
         fourthWordButton.setOnClickListener { checkAnswer(3) }
         nextButton.setOnClickListener { getQuestion() }
 
-        hallyuApi = RetrofitController.getHallyuApiApi()
+        hallyuApi = RetrofitController.getHallyuApi()
 
         getQuestion()
 

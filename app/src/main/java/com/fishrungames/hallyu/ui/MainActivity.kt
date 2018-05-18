@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_PROFILE = "fragmentProfile"
     private val FRAGMENT_NUMERAL_TEST = "fragmentNumeralTest"
     private val FRAGMENT_CARD_TEST = "fragmentCardTest"
+    private val FRAGMENT_COMICS = "fragmentComics"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -132,6 +133,14 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, cardTestFragment, FRAGMENT_CARD_TEST).addToBackStack(FRAGMENT_CARD_TEST)
+        ft.commit()
+    }
+
+    fun openComicsFragment() {
+        val comicsFragment = ComicsFragment()
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, comicsFragment, FRAGMENT_COMICS).addToBackStack(FRAGMENT_COMICS)
         ft.commit()
     }
 
