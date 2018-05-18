@@ -76,7 +76,7 @@
             android:padding="8dp">
 
             <Button
-                android:id="@+id/regisшобterButton2"
+                android:id="@+id/cardTestButton"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

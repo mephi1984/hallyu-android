@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_OTHER = "fragmentOther"
     private val FRAGMENT_PROFILE = "fragmentProfile"
     private val FRAGMENT_NUMERAL_TEST = "fragmentNumeralTest"
+    private val FRAGMENT_CARD_TEST = "fragmentCardTest"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -125,6 +126,14 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, numeralTestFragment, FRAGMENT_NUMERAL_TEST).addToBackStack(FRAGMENT_NUMERAL_TEST)
+        ft.commit()
+    }
+
+    fun openCardTestFragment() {
+        val cardTestFragment = CardTestFragment()
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, cardTestFragment, FRAGMENT_CARD_TEST).addToBackStack(FRAGMENT_CARD_TEST)
         ft.commit()
     }
 

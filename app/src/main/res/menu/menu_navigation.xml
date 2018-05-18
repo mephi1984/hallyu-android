@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/navigation_posts"
-        android:icon="@mipmap/ic_posts_24dp"
+        android:icon="@mipmap/ic_format_list_bulleted_white_24dp"
         android:title="@string/menu.navigation.posts" />
 
     <item
         android:id="@+id/navigation_dictionary"
-        android:icon="@mipmap/ic_dictionary_24dp"
+        android:icon="@mipmap/ic_book_open_variant_white_24dp"
         android:title="@string/menu.navigation.dictionaryAndOther" />
 
     <item
         android:id="@+id/navigation_lessons"
-        android:icon="@mipmap/ic_lessons_24dp"
+        android:icon="@mipmap/ic_book_white_24dp"
         android:title="@string/menu.navigation.other" />
 
     <item
         android:id="@+id/navigation_profile"
-        android:icon="@mipmap/ic_account_24dp"
+        android:icon="@mipmap/ic_account_white_24dp"
         android:title="@string/menu.navigation.profile" />
 
 </menu>

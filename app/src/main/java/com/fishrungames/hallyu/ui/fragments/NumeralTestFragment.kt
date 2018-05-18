@@ -140,8 +140,8 @@ class NumeralTestFragment : BaseFragment() {
             testQuestionTextView.text = question?.number
             answerLabelTextView.text = getString(R.string.text_numeralTestFragment_enterTheNumberInKorean)
         }
-        val showContentAnimation = AlphaAnimation(0.0f, 0.8f)
-        showContentAnimation.duration = 400
+        val showContentAnimation = AlphaAnimation(0.0f, 1.0f)
+        showContentAnimation.duration = 500
         showContentAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) { }
             override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.VISIBLE } }
