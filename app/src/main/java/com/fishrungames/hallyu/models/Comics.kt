@@ -12,12 +12,8 @@ class Comics {
 
     var episodesCount: Int? = null
 
-    var translatedImageUrl: String? = null
+    var originalImage: ComicsImage? = null
 
-    var translatedImageHash: String? = null
-
-    var originalImageUrl: String? = null
-
-    var originalImageHash: String? = null
+    var translatedImage: ComicsImage? = null
 
 }

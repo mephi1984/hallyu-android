@@ -1,7 +1,6 @@
 package com.fishrungames.hallyu.ui.adapters
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,11 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Comics
-import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.assist.FailReason
-import com.nostra13.universalimageloader.core.assist.ImageScaleType
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener
 import kotlinx.android.synthetic.main.item_comics.view.*
 
 class ComicsAdapter(private val comics : List<Comics>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<ComicsAdapter.ViewHolder>() {
@@ -35,7 +30,7 @@ class ComicsAdapter(private val comics : List<Comics>, val context: Context, pri
         holder.tvOriginalTitle.text = comicsItem.originalTitle.toString()
         holder.tvTranslatedTitle.text = comicsItem.translatedTitle.toString()
 
-        ImageLoader.getInstance().displayImage(comicsItem.originalImageUrl, holder.comicsImageView)
+        ImageLoader.getInstance().displayImage(comicsItem.originalImage?.imageUrl, holder.comicsImageView)
 
         holder.contentLayout.setOnClickListener {
             if (mClickListener != null)

@@ -1,5 +1,6 @@
 package com.fishrungames.hallyu.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,10 @@ import com.fishrungames.hallyu.ui.fragments.*
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import kotlinx.android.synthetic.main.activity_main.*
+import android.support.design.internal.BottomNavigationItemView
+import android.support.design.internal.BottomNavigationMenuView
+import android.util.Log
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_NUMERAL_TEST = "fragmentNumeralTest"
     private val FRAGMENT_CARD_TEST = "fragmentCardTest"
     private val FRAGMENT_COMICS = "fragmentComics"
+    private val FRAGMENT_COMICS_EPISODES = "fragmentComicsEpisodes"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -53,6 +59,8 @@ class MainActivity : AppCompatActivity() {
 
         initImageLoader()
 
+        navigation.disableShiftMode()
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         replaceToPostsFragment()
@@ -79,6 +87,26 @@ class MainActivity : AppCompatActivity() {
         val currentFragmentBackStack = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
 
         super.onBackPressed()
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun BottomNavigationView.disableShiftMode() {
+        val menuView = getChildAt(0) as BottomNavigationMenuView
+        try {
+            val shiftingMode = menuView::class.java.getDeclaredField("mShiftingMode")
+            shiftingMode.isAccessible = true
+            shiftingMode.setBoolean(menuView, false)
+            shiftingMode.isAccessible = false
+            for (i in 0 until menuView.childCount) {
+                val item = menuView.getChildAt(i) as BottomNavigationItemView
+                item.setShiftingMode(false)
+                item.setChecked(item.itemData.isChecked)
+            }
+        } catch (e: NoSuchFieldException) {
+            Log.e("BottomNavigationView", "Unable to get shift mode field", e)
+        } catch (e: IllegalStateException) {
+            Log.e("BottomNavigationView", "Unable to change value of shift mode", e)
+        }
     }
 
     private fun initImageLoader() {
@@ -150,6 +178,17 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, comicsFragment, FRAGMENT_COMICS).addToBackStack(FRAGMENT_COMICS)
+        ft.commit()
+    }
+
+    fun openComicsEpisodesFragment(comicsId: String) {
+        val comicsEpisodesFragment = ComicsEpisodesFragment()
+        val bundle = Bundle()
+        bundle.putString("comicsId", comicsId)
+        comicsEpisodesFragment.arguments = bundle
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, comicsEpisodesFragment, FRAGMENT_COMICS_EPISODES).addToBackStack(FRAGMENT_COMICS_EPISODES)
         ft.commit()
     }
 

@@ -36,7 +36,7 @@ class ComicsFragment : BaseFragment() {
         comicsAdapter = ComicsAdapter(comics, context!!, object : ComicsAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val comicsItem: Comics = comics[position]
-
+                getActivityInstance()?.openComicsEpisodesFragment(comicsItem.id.toString())
             }
         })
         comicsRecyclerView.layoutManager = layoutManager
