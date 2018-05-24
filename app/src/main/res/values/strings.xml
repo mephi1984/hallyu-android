@@ -37,8 +37,8 @@
     <string name="text.numeralTestFragment.next">Далее</string>
     <string name="text.numeralTestFragment.start">Начать</string>
     <string name="text.cardTestFragment.next">Далее</string>
-
-    <string name="test">\"Сказать привет\" - В простой вежливой форме\nС дополнительной формой вежливости\n\n\"Здравствуйте\" - \n</string>
+    <string name="text.episodePicturesFragment.back">Назад</string>
+    <string name="text.episodePicturesFragment.next">Далее</string>
     
     <string name="hint.numeralTestFragment.answer">Ответ</string>
     

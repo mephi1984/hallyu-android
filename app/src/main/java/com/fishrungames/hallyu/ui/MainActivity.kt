@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_CARD_TEST = "fragmentCardTest"
     private val FRAGMENT_COMICS = "fragmentComics"
     private val FRAGMENT_COMICS_EPISODES = "fragmentComicsEpisodes"
+    private val FRAGMENT_EPISODE_PICTURES = "fragmentEpisodePictures"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -189,6 +190,17 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, comicsEpisodesFragment, FRAGMENT_COMICS_EPISODES).addToBackStack(FRAGMENT_COMICS_EPISODES)
+        ft.commit()
+    }
+
+    fun openEpisodePicturesFragment(episodeId: String) {
+        val episodePicturesFragment = EpisodePicturesFragment()
+        val bundle = Bundle()
+        bundle.putString("episodeId", episodeId)
+        episodePicturesFragment.arguments = bundle
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, episodePicturesFragment, FRAGMENT_EPISODE_PICTURES).addToBackStack(FRAGMENT_EPISODE_PICTURES)
         ft.commit()
     }
 
