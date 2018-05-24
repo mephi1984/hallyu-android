@@ -9,6 +9,8 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.ui.fragments.*
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -49,6 +51,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        initImageLoader()
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
         replaceToPostsFragment()
@@ -75,6 +79,11 @@ class MainActivity : AppCompatActivity() {
         val currentFragmentBackStack = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
 
         super.onBackPressed()
+    }
+
+    private fun initImageLoader() {
+        val config = ImageLoaderConfiguration.Builder(this).build()
+        ImageLoader.getInstance().init(config)
     }
 
     fun hideInputMethod() {

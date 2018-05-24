@@ -59,7 +59,7 @@ class DictionaryFragment : BaseFragment() {
             getActivityInstance()?.hideProgressBar()
             if (response?.isSuccessful!!) {
                 if (response.body()?.haveTranslatedText()!!) {
-                    translatedEditText.text = response.body()?.translatedText?.Verbose!!
+                    translatedEditText.text = response.body()?.translatedText?.Verbose
                 }
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
