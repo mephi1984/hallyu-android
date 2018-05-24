@@ -47,7 +47,7 @@ class ComicsEpisodesFragment : BaseFragment() {
         comicsEpisodesRecyclerView.setHasFixedSize(true)
 
         getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getEpisodes(comicsId!!).enqueue(getEposodesCallback)
+        newHallyuApi!!.getEpisodes(comicsId!!).enqueue(getEpisodesCallback)
 
     }
 
@@ -62,14 +62,19 @@ class ComicsEpisodesFragment : BaseFragment() {
         }
     }
 
-    private val getEposodesCallback = object : Callback<ComicsEpisodesResponse> {
+    private val getEpisodesCallback = object : Callback<ComicsEpisodesResponse> {
         override fun onResponse(call: Call<ComicsEpisodesResponse>?, response: Response<ComicsEpisodesResponse>?) {
             if (activity == null) {
                 return
             }
             getActivityInstance()?.hideProgressBar()
-            if (response?.isSuccessful!!) {
-                episodes.addAll(response.body()?.episodes!!)
+            val comicsEpisodesResponse = response?.body()
+            if (comicsEpisodesResponse?.haveMessage()!!) {
+                DialogUtil.showAlertDialog(context!!, comicsEpisodesResponse.message!!)
+                return
+            }
+            if (response.isSuccessful) {
+                episodes.addAll(comicsEpisodesResponse.episodes!!)
                 episodeAdapter?.notifyDataSetChanged()
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))

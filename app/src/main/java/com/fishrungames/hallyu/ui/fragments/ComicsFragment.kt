@@ -59,15 +59,13 @@ class ComicsFragment : BaseFragment() {
                 return
             }
             getActivityInstance()?.hideProgressBar()
-            if (response?.isSuccessful!!) {
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
-                comics.addAll(response.body()?.comics!!)
+            val comicsResponse = response?.body()
+            if (comicsResponse?.haveMessage()!!) {
+                DialogUtil.showAlertDialog(context!!, comicsResponse.message!!)
+                return
+            }
+            if (response.isSuccessful) {
+                comics.addAll(comicsResponse.comics!!)
                 comicsAdapter?.notifyDataSetChanged()
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
