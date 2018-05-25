@@ -1,10 +1,7 @@
 package com.fishrungames.hallyu.utils
 
 import android.content.Context
-import java.io.IOException
-import java.io.OutputStreamWriter
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.*
 
 object FileUtil {
 
@@ -38,6 +35,17 @@ object FileUtil {
             e.printStackTrace()
         }
         return fileData
+    }
+
+    fun getFilesList(context: Context): List<String> {
+        val filesList: MutableList<String> = mutableListOf()
+        val path = context.filesDir.toString()
+        val directory = File(path)
+        val files = directory.listFiles()
+        for (file in files) {
+            filesList.add(file.name)
+        }
+        return filesList
     }
 
 }

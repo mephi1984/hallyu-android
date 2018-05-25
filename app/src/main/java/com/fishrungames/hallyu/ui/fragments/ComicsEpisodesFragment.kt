@@ -43,8 +43,9 @@ class ComicsEpisodesFragment : BaseFragment() {
 
         val layoutManager = LinearLayoutManager(context!!)
         episodeAdapter = ComicsEpisodeAdapter(episodes, context!!, comicsId!!, object : ComicsEpisodeAdapter.ClickListener {
-            override fun onClick(position: Int) {
+            override fun onClick(position: Int, episodeState: Int) {
                 val episode: ComicsEpisode = episodes[position]
+                Log.d("fragmentLog", "episodeState: $episodeState")
                 getActivityInstance()?.openEpisodePicturesFragment(episode.title.toString())
             }
         })
