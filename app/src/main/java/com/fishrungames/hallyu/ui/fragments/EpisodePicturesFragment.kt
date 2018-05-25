@@ -9,16 +9,9 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ScrollView
 import com.fishrungames.hallyu.R
-import com.fishrungames.hallyu.models.responses.EpisodePicturesResponse
-import com.fishrungames.hallyu.utils.DialogUtil
-import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
-import com.fishrungames.hallyu.utils.retrofit.RetrofitController
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import kotlinx.android.synthetic.main.fragment_episode_pictures.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class EpisodePicturesFragment : BaseFragment() {
 
@@ -26,7 +19,6 @@ class EpisodePicturesFragment : BaseFragment() {
     private val LANGUAGE_KOREAN = 1
 
     private var episodeTitle: String? = null
-    private var newHallyuApi: NewHallyuApi? = null
     private var originalImages: MutableList<String> = mutableListOf()
     private var translatedImages: MutableList<String> = mutableListOf()
     private var currentPicture: Int = 1
@@ -42,16 +34,11 @@ class EpisodePicturesFragment : BaseFragment() {
 
         getDataFromArguments()
 
-        newHallyuApi = RetrofitController.getNewHallyuApi()
-
-//        getActivityInstance()?.showProgressBar()
-//        newHallyuApi!!.getPictures(episodeId!!).enqueue(getPicturesCallback)
-
         nextTextView.setOnClickListener { nextBtnClicked() }
         backTextView.setOnClickListener { backBtnClicked() }
 
         pictureImageView.setOnClickListener {
-            currentLanguage = if (currentLanguage == 0) { 1 } else { 0 }
+            currentLanguage = if (currentLanguage == LANGUAGE_RUSSIAN) { LANGUAGE_KOREAN } else { LANGUAGE_RUSSIAN }
             showPicture()
         }
 
@@ -85,14 +72,14 @@ class EpisodePicturesFragment : BaseFragment() {
 
     private fun nextBtnClicked() {
         currentPicture++
-        currentLanguage = 0
+        currentLanguage = LANGUAGE_RUSSIAN
         setupNavigationLayout()
         showPicture()
     }
 
     private fun backBtnClicked() {
         currentPicture--
-        currentLanguage = 0
+        currentLanguage = LANGUAGE_RUSSIAN
         setupNavigationLayout()
         showPicture()
     }
@@ -100,7 +87,7 @@ class EpisodePicturesFragment : BaseFragment() {
     private fun showPicture() {
         getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.INVISIBLE }
         getActivityInstance()?.showProgressBar()
-        val url = if (currentLanguage == 0) {
+        val url = if (currentLanguage == LANGUAGE_RUSSIAN) {
             originalImages[currentPicture - 1]
         } else {
             translatedImages[currentPicture - 1]
@@ -126,38 +113,38 @@ class EpisodePicturesFragment : BaseFragment() {
         })
     }
 
-    private val getPicturesCallback = object : Callback<EpisodePicturesResponse> {
-        override fun onResponse(call: Call<EpisodePicturesResponse>?, response: Response<EpisodePicturesResponse>?) {
-            if (activity == null) {
-                return
-            }
-            getActivityInstance()?.hideProgressBar()
-            val episodePicturesResponse = response?.body()
-            if (episodePicturesResponse?.haveMessage()!!) {
-                DialogUtil.showAlertDialog(context!!, episodePicturesResponse.message!!)
-                return
-            }
-            if (response.isSuccessful) {
-                for (episodePicture in episodePicturesResponse.pictures!!) {
-                    originalImages.add(episodePicture.originalImage?.imageUrl!!)
-                    translatedImages.add(episodePicture.translatedImage?.imageUrl!!)
-                }
-                picturesCount = originalImages.size
-                setupNavigationLayout()
-                showPicture()
-            } else {
-                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
-            }
-        }
-
-        override fun onFailure(call: Call<EpisodePicturesResponse>?, t: Throwable?) {
-            if (activity == null) {
-                return
-            }
-            getActivityInstance()?.hideProgressBar()
-            DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
-        }
-
-    }
+//    private val getPicturesCallback = object : Callback<EpisodePicturesResponse> {
+//        override fun onResponse(call: Call<EpisodePicturesResponse>?, response: Response<EpisodePicturesResponse>?) {
+//            if (activity == null) {
+//                return
+//            }
+//            getActivityInstance()?.hideProgressBar()
+//            val episodePicturesResponse = response?.body()
+//            if (episodePicturesResponse?.haveMessage()!!) {
+//                DialogUtil.showAlertDialog(context!!, episodePicturesResponse.message!!)
+//                return
+//            }
+//            if (response.isSuccessful) {
+//                for (episodePicture in episodePicturesResponse.pictures!!) {
+//                    originalImages.add(episodePicture.originalImage?.imageUrl!!)
+//                    translatedImages.add(episodePicture.translatedImage?.imageUrl!!)
+//                }
+//                picturesCount = originalImages.size
+//                setupNavigationLayout()
+//                showPicture()
+//            } else {
+//                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
+//            }
+//        }
+//
+//        override fun onFailure(call: Call<EpisodePicturesResponse>?, t: Throwable?) {
+//            if (activity == null) {
+//                return
+//            }
+//            getActivityInstance()?.hideProgressBar()
+//            DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
+//        }
+//
+//    }
 
 }

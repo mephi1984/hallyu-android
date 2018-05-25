@@ -2,10 +2,10 @@ package com.fishrungames.hallyu.constants
 
 object FileConstants {
 
-    private val FILE_EPISODE_PICTURES_DATA: String = "fileEpisodePictures"
+    private val FILE_COMICS_DATA: String = "fileComicsData"
 
-    fun getEpisodeFilename(episodeId: String): String {
-        return FILE_EPISODE_PICTURES_DATA + episodeId
+    fun getComicsFilename(comicsId: String): String {
+        return FILE_COMICS_DATA + comicsId
     }
 
 }

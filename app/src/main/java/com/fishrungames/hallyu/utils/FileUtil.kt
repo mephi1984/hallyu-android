@@ -18,7 +18,7 @@ object FileUtil {
         }
     }
 
-    private fun readFromFile(fileName: String, context: Context): String {
+    fun readFromFile(fileName: String, context: Context): String {
         var fileData = ""
         try {
             val inputStream = context.openFileInput(fileName)
@@ -26,10 +26,11 @@ object FileUtil {
                 val inputStreamReader = InputStreamReader(inputStream)
                 val bufferedReader = BufferedReader(inputStreamReader)
                 val stringBuilder = StringBuilder()
-                val receiveString = bufferedReader.readLine()
+                var receiveString = bufferedReader.readLine()
                 while (receiveString != null) {
                     stringBuilder.append(receiveString)
-                    }
+                    receiveString = bufferedReader.readLine()
+                }
                 inputStream.close()
                 fileData = stringBuilder.toString()
             }

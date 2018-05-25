@@ -2,16 +2,22 @@ package com.fishrungames.hallyu.ui.fragments
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.models.responses.ComicsEpisodesResponse
 import com.fishrungames.hallyu.ui.adapters.ComicsEpisodeAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.FileUtil
+import com.fishrungames.hallyu.utils.NetworkUtil
 import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_comics_episodes.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -36,7 +42,7 @@ class ComicsEpisodesFragment : BaseFragment() {
         newHallyuApi = RetrofitController.getNewHallyuApi()
 
         val layoutManager = LinearLayoutManager(context!!)
-        episodeAdapter = ComicsEpisodeAdapter(episodes, context!!, object : ComicsEpisodeAdapter.ClickListener {
+        episodeAdapter = ComicsEpisodeAdapter(episodes, context!!, comicsId!!, object : ComicsEpisodeAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val episode: ComicsEpisode = episodes[position]
                 getActivityInstance()?.openEpisodePicturesFragment(episode.title.toString())
@@ -46,8 +52,12 @@ class ComicsEpisodesFragment : BaseFragment() {
         comicsEpisodesRecyclerView.adapter = episodeAdapter
         comicsEpisodesRecyclerView.setHasFixedSize(true)
 
-        getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getEpisodes(comicsId!!).enqueue(getEpisodesCallback)
+        if (NetworkUtil.isNetworkAvailable(context!!)) {
+            getActivityInstance()?.showProgressBar()
+            newHallyuApi!!.getEpisodes(comicsId!!).enqueue(getEpisodesCallback)
+        } else {
+            getEpisodesListFromFile()
+        }
 
     }
 
@@ -62,6 +72,28 @@ class ComicsEpisodesFragment : BaseFragment() {
         }
     }
 
+    private fun getEpisodesListFromFile() {
+        val filename = FileConstants.getComicsFilename(comicsId!!)
+        val fileData = FileUtil.readFromFile(filename, context!!)
+        if (fileData.isEmpty()) {
+            return
+        }
+        val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
+        episodes.addAll(Gson().fromJson(fileData, listType))
+        episodeAdapter?.notifyDataSetChanged()
+    }
+
+    private fun writeEpisodesListToFile(episodes: List<ComicsEpisode>) {
+        val filename = FileConstants.getComicsFilename(comicsId!!)
+        val fileData = FileUtil.readFromFile(filename, context!!)
+        if (fileData.isEmpty()) {
+            val gson = Gson()
+            val listType = object : TypeToken<List<ComicsEpisode>>(){}.type
+            val json = gson.toJson(episodes, listType)
+            FileUtil.writeToFile(json, filename, context!!)
+        }
+    }
+
     private val getEpisodesCallback = object : Callback<ComicsEpisodesResponse> {
         override fun onResponse(call: Call<ComicsEpisodesResponse>?, response: Response<ComicsEpisodesResponse>?) {
             if (activity == null) {
@@ -73,7 +105,8 @@ class ComicsEpisodesFragment : BaseFragment() {
                 DialogUtil.showAlertDialog(context!!, comicsEpisodesResponse.message!!)
                 return
             }
-            if (response.isSuccessful) {
+            if (response.isSuccessful && !comicsEpisodesResponse.episodes!!.isEmpty()) {
+                writeEpisodesListToFile(comicsEpisodesResponse.episodes!!)
                 episodes.addAll(comicsEpisodesResponse.episodes!!)
                 episodeAdapter?.notifyDataSetChanged()
             } else {

@@ -1,10 +1,12 @@
 package com.fishrungames.hallyu.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.utils.FileUtil
 import kotlinx.android.synthetic.main.fragment_other.*
 
 class OtherFragment : BaseFragment() {

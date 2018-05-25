@@ -10,15 +10,24 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.ui.MainActivity
 import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.FileUtil
 import com.fishrungames.hallyu.utils.NetworkUtil
 import kotlinx.android.synthetic.main.item_comics_episode.view.*
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<ComicsEpisodeAdapter.ViewHolder>() {
+class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val context: Context, val comicsId: String, private val clickListener: ClickListener) : RecyclerView.Adapter<ComicsEpisodeAdapter.ViewHolder>() {
+
+    private val cacheEpisodes: MutableList<ComicsEpisode> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
+        getEpisodesListFromFile()
+
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_comics_episode, parent, false))
     }
 
@@ -57,6 +66,16 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         } else {
             DialogUtil.showAlertDialog(context, context.getString(R.string.error_message_networkError))
         }
+    }
+
+    private fun getEpisodesListFromFile() {
+        val filename = FileConstants.getComicsFilename(comicsId)
+        val fileData = FileUtil.readFromFile(filename, context)
+        if (fileData.isEmpty()) {
+            return
+        }
+        val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
+        cacheEpisodes.addAll(Gson().fromJson(fileData, listType))
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {

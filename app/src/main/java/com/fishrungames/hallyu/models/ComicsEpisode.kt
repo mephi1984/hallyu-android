@@ -14,4 +14,6 @@ class ComicsEpisode {
 
     var picturesCount: Int? = null
 
+    var images: List<EpisodePicture>? = null
+
 }

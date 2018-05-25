@@ -16,6 +16,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.util.Log
+import com.fishrungames.hallyu.constants.FileConstants
+import com.fishrungames.hallyu.utils.FileUtil
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageScaleType
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType
