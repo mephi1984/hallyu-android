@@ -16,6 +16,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.util.Log
+import com.nostra13.universalimageloader.core.DisplayImageOptions
+import com.nostra13.universalimageloader.core.assist.ImageScaleType
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -73,6 +79,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
+
     override fun onBackPressed() {
 
         val backStackCount = supportFragmentManager.backStackEntryCount
@@ -111,7 +122,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initImageLoader() {
-        val config = ImageLoaderConfiguration.Builder(this).build()
+        val options = DisplayImageOptions.Builder()
+                .imageScaleType(ImageScaleType.EXACTLY)
+                .build()
+
+        val config = ImageLoaderConfiguration.Builder(this)
+                .defaultDisplayImageOptions(options)
+                .build()
+
         ImageLoader.getInstance().init(config)
     }
 
@@ -193,10 +211,10 @@ class MainActivity : AppCompatActivity() {
         ft.commit()
     }
 
-    fun openEpisodePicturesFragment(episodeId: String) {
+    fun openEpisodePicturesFragment(episodeTitle: String) {
         val episodePicturesFragment = EpisodePicturesFragment()
         val bundle = Bundle()
-        bundle.putString("episodeId", episodeId)
+        bundle.putString("episodeTitle", episodeTitle)
         episodePicturesFragment.arguments = bundle
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
@@ -209,6 +227,16 @@ class MainActivity : AppCompatActivity() {
             updateBottomNavigationViewState(true)
         } else {
             updateBottomNavigationViewState(false)
+        }
+    }
+
+    fun setBackButtonViewState(currentFragmentTag: String?) {
+        if (currentFragmentTag != null && bottomNavigationFragments.contains(currentFragmentTag)) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(false)
+            supportActionBar?.setDisplayShowHomeEnabled(false)
+        } else {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.setDisplayShowHomeEnabled(true)
         }
     }
 

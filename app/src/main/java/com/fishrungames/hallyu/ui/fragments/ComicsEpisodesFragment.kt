@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.models.responses.ComicsEpisodesResponse
-import com.fishrungames.hallyu.ui.adapters.ComiscEpisodeAdapter
+import com.fishrungames.hallyu.ui.adapters.ComicsEpisodeAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
 import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
@@ -19,7 +19,7 @@ import retrofit2.Response
 
 class ComicsEpisodesFragment : BaseFragment() {
 
-    private var episodeAdapter: ComiscEpisodeAdapter? = null
+    private var episodeAdapter: ComicsEpisodeAdapter? = null
     private var comicsId: String? = null
     private var newHallyuApi: NewHallyuApi? = null
     private var episodes: MutableList<ComicsEpisode> = mutableListOf()
@@ -36,10 +36,10 @@ class ComicsEpisodesFragment : BaseFragment() {
         newHallyuApi = RetrofitController.getNewHallyuApi()
 
         val layoutManager = LinearLayoutManager(context!!)
-        episodeAdapter = ComiscEpisodeAdapter(episodes, context!!, object : ComiscEpisodeAdapter.ClickListener {
+        episodeAdapter = ComicsEpisodeAdapter(episodes, context!!, object : ComicsEpisodeAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val episode: ComicsEpisode = episodes[position]
-                getActivityInstance()?.openEpisodePicturesFragment(episode.id.toString())
+                getActivityInstance()?.openEpisodePicturesFragment(episode.title.toString())
             }
         })
         comicsEpisodesRecyclerView.layoutManager = layoutManager

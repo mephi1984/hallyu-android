@@ -20,6 +20,7 @@ abstract class BaseFragment : Fragment() {
 
     override fun onResume() {
         getActivityInstance()?.setBottomNavigationViewState(this.tag)
+        getActivityInstance()?.setBackButtonViewState(this.tag)
         super.onResume()
     }
 
