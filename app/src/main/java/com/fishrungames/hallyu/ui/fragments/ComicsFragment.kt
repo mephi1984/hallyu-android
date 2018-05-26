@@ -1,5 +1,6 @@
 package com.fishrungames.hallyu.ui.fragments
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.Comics
+import com.fishrungames.hallyu.models.ComicsImage
 import com.fishrungames.hallyu.models.responses.ComicsResponse
 import com.fishrungames.hallyu.ui.adapters.ComicsAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
@@ -17,6 +19,8 @@ import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import kotlinx.android.synthetic.main.fragment_comics.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -75,13 +79,30 @@ class ComicsFragment : BaseFragment() {
 
     private fun writeComicsListToFile(comicsList: List<Comics>) {
         val filename = FileConstants.FILE_COMICS_DATA
-        val fileData = FileUtil.readFromFile(filename, context!!)
-        if (fileData.isEmpty()) {
-            val gson = Gson()
-            val listType = object : TypeToken<List<Comics>>(){}.type
-            val json = gson.toJson(comicsList, listType)
-            FileUtil.writeToFile(json, filename, context!!)
+        val gson = Gson()
+        val listType = object : TypeToken<List<Comics>>(){}.type
+        val json = gson.toJson(comicsList, listType)
+        FileUtil.writeToFile(json, filename, context!!)
+    }
+
+    private fun saveComicsImages(comicsList: List<Comics>) {
+        val images = getComicsImages(comicsList)
+        for (image in images) {
+            ImageLoader.getInstance().loadImage(image.imageUrl, object : SimpleImageLoadingListener() {
+                override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+                    FileUtil.saveBitmapOnStorage(context!!, image.name!!, loadedImage!!)
+                }
+            })
         }
+    }
+
+    private fun getComicsImages(comicsList: List<Comics>): List<ComicsImage> {
+        val comicsImages: MutableList<ComicsImage> = mutableListOf()
+        for (comics in comicsList) {
+            comicsImages.add(comics.originalImage!!)
+            comicsImages.add(comics.translatedImage!!)
+        }
+        return comicsImages
     }
 
     private val getComicsCallback = object : Callback<ComicsResponse> {
@@ -97,6 +118,7 @@ class ComicsFragment : BaseFragment() {
             }
             if (response.isSuccessful && !comicsResponse.comics!!.isEmpty()) {
                 writeComicsListToFile(comicsResponse.comics!!)
+                saveComicsImages(comicsResponse.comics!!)
                 comics.addAll(comicsResponse.comics!!)
                 comicsAdapter?.notifyDataSetChanged()
             } else {

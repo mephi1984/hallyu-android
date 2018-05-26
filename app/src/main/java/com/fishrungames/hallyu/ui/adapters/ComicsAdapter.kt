@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Comics
+import com.fishrungames.hallyu.utils.FileUtil
 import com.nostra13.universalimageloader.core.ImageLoader
 import kotlinx.android.synthetic.main.item_comics.view.*
 
@@ -30,7 +31,12 @@ class ComicsAdapter(private val comics : List<Comics>, val context: Context, pri
         holder.tvOriginalTitle.text = comicsItem.originalTitle.toString()
         holder.tvTranslatedTitle.text = comicsItem.translatedTitle.toString()
 
-        ImageLoader.getInstance().displayImage(comicsItem.originalImage?.imageUrl, holder.comicsImageView)
+        val bitmap = FileUtil.getBitmapFromStorage(context, comicsItem.originalImage?.name!!)
+        if (bitmap == null) {
+            ImageLoader.getInstance().displayImage(comicsItem.originalImage?.imageUrl, holder.comicsImageView)
+        } else {
+            holder.comicsImageView.setImageBitmap(bitmap)
+        }
 
         holder.contentLayout.setOnClickListener {
             if (mClickListener != null)

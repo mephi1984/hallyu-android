@@ -150,7 +150,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         return episodeImages
     }
 
-    private fun getEpisodeImages(episode: ComicsEpisode): List<String> {
+    private fun getEpisodeImagesName(episode: ComicsEpisode): List<String> {
         val episodeImages: MutableList<String> = mutableListOf()
         for (image in episode.images!!) {
             episodeImages.add(image.originalImage?.name!!)
@@ -160,7 +160,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
     }
 
     private fun getLoadedImagesCount(episode: ComicsEpisode): Int {
-        var loadedTextures = 0
+        var loadedImages = 0
         val episodeIndexFromCache = getEpisodeIndexByList(episode, cacheEpisodes)
         if (episodeIndexFromCache < 0) { // new episode
             insertEpisodeToCache(episode)
@@ -173,14 +173,14 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         for (episodePicture in episodePictures) {
             for (cacheEpisodePicture in cacheEpisodePictures) {
                 if (fileList.contains(episodePicture.originalImage?.name) && episodePicture.originalImage?.imageHash.equals(cacheEpisodePicture.originalImage?.imageHash)) {
-                    loadedTextures++
+                    loadedImages++
                 }
                 if (fileList.contains(episodePicture.translatedImage?.name) && episodePicture.translatedImage?.imageHash.equals(cacheEpisodePicture.translatedImage?.imageHash)) {
-                    loadedTextures++
+                    loadedImages++
                 }
             }
         }
-        return loadedTextures
+        return loadedImages
     }
 
     private fun getImagesToLoad(episode: ComicsEpisode): List<ComicsImage> {
@@ -218,7 +218,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         val loadedTextures = getLoadedImagesCount(episode)
         return if (loadedTextures == 0) {
             STATE_NOT_LOADED
-        } else if (loadedTextures > 0 && loadedTextures < getEpisodeImages(episode).size) {
+        } else if (loadedTextures > 0 && loadedTextures < getEpisodeImagesName(episode).size) {
             STATE_LOADING
         } else {
             STATE_LOADED
