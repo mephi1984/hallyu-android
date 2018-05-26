@@ -61,8 +61,8 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
 
         loadMissingImages(episode, holder.ivLoadEpisode, holder.pbLoadingEpisode)
 
-        holder.ivLoadEpisode.setOnClickListener {
-            if (getEpisodeState(episode) == STATE_LOAD) {
+        if (getEpisodeState(episode) == STATE_LOAD) {
+            holder.ivLoadEpisode.setOnClickListener {
                 if (NetworkUtil.isNetworkAvailable(context)) {
                     saveEpisodeImagesOnStorage(episode, getImagesToLoad(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
                 } else {

@@ -1,6 +1,5 @@
 package com.fishrungames.hallyu.ui.fragments
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +8,9 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import android.widget.ScrollView
 import com.fishrungames.hallyu.R
-import com.nostra13.universalimageloader.core.ImageLoader
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
+import com.fishrungames.hallyu.models.ComicsEpisode
+import com.fishrungames.hallyu.models.ComicsImage
+import com.fishrungames.hallyu.utils.FileUtil
 import kotlinx.android.synthetic.main.fragment_episode_pictures.*
 
 class EpisodePicturesFragment : BaseFragment() {
@@ -18,9 +18,9 @@ class EpisodePicturesFragment : BaseFragment() {
     private val LANGUAGE_RUSSIAN = 0
     private val LANGUAGE_KOREAN = 1
 
-    private var episodeTitle: String? = null
-    private var originalImages: MutableList<String> = mutableListOf()
-    private var translatedImages: MutableList<String> = mutableListOf()
+    private var episode: ComicsEpisode? = null
+    private var originalImages: MutableList<ComicsImage> = mutableListOf()
+    private var translatedImages: MutableList<ComicsImage> = mutableListOf()
     private var currentPicture: Int = 1
     private var currentLanguage = 0
     private var picturesCount: Int = 0
@@ -42,13 +42,35 @@ class EpisodePicturesFragment : BaseFragment() {
             showPicture()
         }
 
+        initData()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        setupActionBar()
     }
 
     private fun getDataFromArguments() {
-        if (arguments != null) {
-            episodeTitle = arguments!!.getString("episodeTitle")
-            getActivityInstance()?.supportActionBar?.title = episodeTitle
+        if (episode == null && arguments != null) {
+            episode = arguments!!.getSerializable("episode") as ComicsEpisode
         }
+    }
+
+    private fun setupActionBar() {
+        if (episode != null) {
+            getActivityInstance()?.supportActionBar?.title = episode!!.title
+        }
+    }
+
+    private fun initData() {
+        for (episodePicture in episode?.images!!) {
+            originalImages.add(episodePicture.originalImage!!)
+            translatedImages.add(episodePicture.translatedImage!!)
+        }
+        picturesCount = originalImages.size
+        setupNavigationLayout()
+        showPicture()
     }
 
     private fun updateCountLabel() {
@@ -86,65 +108,23 @@ class EpisodePicturesFragment : BaseFragment() {
 
     private fun showPicture() {
         getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.INVISIBLE }
-        getActivityInstance()?.showProgressBar()
-        val url = if (currentLanguage == LANGUAGE_RUSSIAN) {
-            originalImages[currentPicture - 1]
+        val bitmap = if (currentLanguage == LANGUAGE_RUSSIAN) {
+            FileUtil.getBitmapFromStorage(context!!, originalImages[currentPicture - 1].name!!)
         } else {
-            translatedImages[currentPicture - 1]
+            FileUtil.getBitmapFromStorage(context!!, translatedImages[currentPicture - 1].name!!)
         }
-        ImageLoader.getInstance().loadImage(url, object : SimpleImageLoadingListener() {
-            override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+        pictureImageView.setImageBitmap(bitmap)
+        pictureScrollView.fullScroll(ScrollView.FOCUS_UP)
 
-                getActivityInstance()?.hideProgressBar()
-
-                pictureImageView.setImageBitmap(loadedImage)
-                pictureScrollView.fullScroll(ScrollView.FOCUS_UP)
-
-                val showPictureAnimation = AlphaAnimation(0.0f, 1.0f)
-                showPictureAnimation.duration = 500
-                showPictureAnimation.setAnimationListener(object : Animation.AnimationListener {
-                    override fun onAnimationStart(animation: Animation) { }
-                    override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.VISIBLE } }
-                    override fun onAnimationRepeat(animation: Animation) { }
-                })
-
-                pictureImageView.startAnimation(showPictureAnimation)
-            }
+        val showPictureAnimation = AlphaAnimation(0.0f, 1.0f)
+        showPictureAnimation.duration = 500
+        showPictureAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) { }
+            override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.VISIBLE } }
+            override fun onAnimationRepeat(animation: Animation) { }
         })
-    }
 
-//    private val getPicturesCallback = object : Callback<EpisodePicturesResponse> {
-//        override fun onResponse(call: Call<EpisodePicturesResponse>?, response: Response<EpisodePicturesResponse>?) {
-//            if (activity == null) {
-//                return
-//            }
-//            getActivityInstance()?.hideProgressBar()
-//            val episodePicturesResponse = response?.body()
-//            if (episodePicturesResponse?.haveMessage()!!) {
-//                DialogUtil.showAlertDialog(context!!, episodePicturesResponse.message!!)
-//                return
-//            }
-//            if (response.isSuccessful) {
-//                for (episodePicture in episodePicturesResponse.pictures!!) {
-//                    originalImages.add(episodePicture.originalImage?.imageUrl!!)
-//                    translatedImages.add(episodePicture.translatedImage?.imageUrl!!)
-//                }
-//                picturesCount = originalImages.size
-//                setupNavigationLayout()
-//                showPicture()
-//            } else {
-//                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
-//            }
-//        }
-//
-//        override fun onFailure(call: Call<EpisodePicturesResponse>?, t: Throwable?) {
-//            if (activity == null) {
-//                return
-//            }
-//            getActivityInstance()?.hideProgressBar()
-//            DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
-//        }
-//
-//    }
+        pictureImageView.startAnimation(showPictureAnimation)
+    }
 
 }

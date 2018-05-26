@@ -1,6 +1,8 @@
 package com.fishrungames.hallyu.models
 
-class ComicsEpisode {
+import java.io.Serializable
+
+class ComicsEpisode : Serializable {
 
     var id: Int? = null
 

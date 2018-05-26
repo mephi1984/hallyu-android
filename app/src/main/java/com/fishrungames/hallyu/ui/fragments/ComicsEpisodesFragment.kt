@@ -46,7 +46,7 @@ class ComicsEpisodesFragment : BaseFragment() {
             override fun onClick(position: Int, episodeState: Int) {
                 val episode: ComicsEpisode = episodes[position]
                 if (episodeState == 2) {
-                    getActivityInstance()?.openEpisodePicturesFragment(episode.title.toString())
+                    getActivityInstance()?.openEpisodePicturesFragment(episode)
                 }
             }
         })

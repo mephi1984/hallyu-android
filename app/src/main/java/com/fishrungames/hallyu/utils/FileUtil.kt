@@ -3,6 +3,9 @@ package com.fishrungames.hallyu.utils
 import android.content.Context
 import android.graphics.Bitmap
 import java.io.*
+import android.graphics.BitmapFactory
+
+
 
 object FileUtil {
 
@@ -62,6 +65,16 @@ object FileUtil {
             return false
         }
         return true
+    }
+
+    fun getBitmapFromStorage(context: Context, filename: String): Bitmap? {
+        val path = context.filesDir.toString() + "/$filename"
+        try {
+            return BitmapFactory.decodeFile(path)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
     }
 
 }

@@ -17,6 +17,7 @@ import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.util.Log
 import com.fishrungames.hallyu.constants.FileConstants
+import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.utils.FileUtil
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageScaleType
@@ -213,10 +214,10 @@ class MainActivity : AppCompatActivity() {
         ft.commit()
     }
 
-    fun openEpisodePicturesFragment(episodeTitle: String) {
+    fun openEpisodePicturesFragment(episode: ComicsEpisode) {
         val episodePicturesFragment = EpisodePicturesFragment()
         val bundle = Bundle()
-        bundle.putString("episodeTitle", episodeTitle)
+        bundle.putSerializable("episode", episode)
         episodePicturesFragment.arguments = bundle
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
