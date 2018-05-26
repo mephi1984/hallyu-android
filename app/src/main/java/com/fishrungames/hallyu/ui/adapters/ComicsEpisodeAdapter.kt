@@ -20,6 +20,12 @@ import com.fishrungames.hallyu.utils.NetworkUtil
 import kotlinx.android.synthetic.main.item_comics_episode.view.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import android.graphics.Bitmap
+import android.util.Log
+import com.fishrungames.hallyu.models.ComicsImage
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
+import com.nostra13.universalimageloader.core.ImageLoader
+
 
 class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val context: Context, private val comicsId: String, private val clickListener: ClickListener) : RecyclerView.Adapter<ComicsEpisodeAdapter.ViewHolder>() {
 
@@ -51,9 +57,19 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
                 mClickListener?.onClick(position, getEpisodeState(episode))
         }
 
-//        holder.ivLoadEpisode.setOnClickListener { loadEpisode(holder.ivLoadEpisode, holder.pbLoadingEpisode) }
-
         setEpisodeState(getEpisodeState(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
+
+        loadMissingImages(episode, holder.ivLoadEpisode, holder.pbLoadingEpisode)
+
+        holder.ivLoadEpisode.setOnClickListener {
+            if (getEpisodeState(episode) == STATE_LOAD) {
+                if (NetworkUtil.isNetworkAvailable(context)) {
+                    saveEpisodeImagesOnStorage(episode, getImagesToLoad(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
+                } else {
+                    DialogUtil.showAlertDialog(context, context.getString(R.string.error_message_networkError))
+                }
+            }
+        }
 
     }
 
@@ -65,14 +81,46 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         fun onClick(position: Int, episodeState: Int)
     }
 
-    private fun loadEpisode(loadEpisodeImage: ImageView, loadingEpisodeBar: ProgressBar) {
-        if (NetworkUtil.isNetworkAvailable(context)) {
-            (context as MainActivity)
-            context.runOnUiThread { loadEpisodeImage.visibility = View.INVISIBLE }
-            context.runOnUiThread { loadingEpisodeBar.visibility = View.VISIBLE }
-        } else {
-            DialogUtil.showAlertDialog(context, context.getString(R.string.error_message_networkError))
+    private fun saveEpisodeImagesOnStorage(episode: ComicsEpisode, imagesList: List<ComicsImage>, loadEpisodeImage: ImageView, loadingEpisodeBar: ProgressBar) {
+        setEpisodeState(STATE_LOADING, loadEpisodeImage, loadingEpisodeBar)
+        val loadedImages: MutableList<ComicsImage> = mutableListOf()
+        for (image in imagesList) {
+            ImageLoader.getInstance().loadImage(image.imageUrl, object : SimpleImageLoadingListener() {
+                override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+                    loadedImages.add(image)
+                    Log.d("UIL_LOG", "Loaded image: ${image.name}")
+                    if (FileUtil.saveBitmapOnStorage(context, image.name!!, loadedImage!!)) {
+                        Log.d("UIL_LOG", "Loaded images: ${loadedImages.size}/${imagesList.size}")
+                        if (loadedImages.size == imagesList.size) {
+                            updateEpisodeInCache(episode)
+                            setEpisodeState(STATE_LOADED, loadEpisodeImage, loadingEpisodeBar)
+                        }
+                    }
+                }
+            })
         }
+    }
+
+    private fun loadMissingImages(episode: ComicsEpisode, loadEpisodeImage: ImageView, loadingEpisodeBar: ProgressBar) {
+        if (getEpisodeState(episode) == STATE_LOADING) {
+            saveEpisodeImagesOnStorage(episode, getImagesToLoad(episode), loadEpisodeImage, loadingEpisodeBar)
+        }
+    }
+
+    private fun insertEpisodeToCache(episode: ComicsEpisode) {
+        cacheEpisodes.add(episode)
+        val gson = Gson()
+        val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
+        val json = gson.toJson(cacheEpisodes, listType)
+        FileUtil.writeToFile(json, FileConstants.getComicsFilename(comicsId), context)
+    }
+
+    private fun updateEpisodeInCache(episode: ComicsEpisode) {
+        cacheEpisodes[getEpisodeIndexByList(episode, cacheEpisodes)] = episode
+        val gson = Gson()
+        val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
+        val json = gson.toJson(cacheEpisodes, listType)
+        FileUtil.writeToFile(json, FileConstants.getComicsFilename(comicsId), context)
     }
 
     private fun getEpisodesListFromFile() {
@@ -115,7 +163,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         var loadedTextures = 0
         val episodeIndexFromCache = getEpisodeIndexByList(episode, cacheEpisodes)
         if (episodeIndexFromCache < 0) { // new episode
-//            insertEpisodeToCache(episode)
+            insertEpisodeToCache(episode)
             return 0
         }
         val cacheEpisode = cacheEpisodes[episodeIndexFromCache]
@@ -133,6 +181,37 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
             }
         }
         return loadedTextures
+    }
+
+    private fun getImagesToLoad(episode: ComicsEpisode): List<ComicsImage> {
+        val imagesToLoad: MutableList<ComicsImage> = mutableListOf()
+        val filesList = FileUtil.getFilesList(context)
+
+        val episodeIndexFromCache = getEpisodeIndexByList(episode, cacheEpisodes)
+        val cacheEpisode = cacheEpisodes[episodeIndexFromCache]
+
+        val cacheEpisodePictures = getEpisodePictures(cacheEpisode)
+        val episodePictures = getEpisodePictures(episode)
+
+        for (episodePicture in episodePictures) {
+            if (!filesList.contains(episodePicture.originalImage?.name)) {
+                imagesToLoad.add(episodePicture.originalImage!!)
+            }
+            if (!filesList.contains(episodePicture.translatedImage?.name)) {
+                imagesToLoad.add(episodePicture.translatedImage!!)
+                continue
+            }
+            for (cacheEpisodePicture in cacheEpisodePictures) {
+                if (episodePicture.originalImage?.name.equals(cacheEpisodePicture.originalImage?.name) && !episodePicture.originalImage?.imageHash.equals(cacheEpisodePicture.originalImage?.imageHash)) {
+                    imagesToLoad.add(episodePicture.originalImage!!)
+                }
+                if (episodePicture.translatedImage?.name.equals(cacheEpisodePicture.translatedImage?.name) && !episodePicture.translatedImage?.imageHash.equals(cacheEpisodePicture.translatedImage?.imageHash)) {
+                    imagesToLoad.add(episodePicture.translatedImage!!)
+                }
+            }
+
+        }
+        return imagesToLoad
     }
 
     private fun getEpisodeState(episode: ComicsEpisode): Int {

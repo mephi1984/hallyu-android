@@ -1,6 +1,7 @@
 package com.fishrungames.hallyu.utils
 
 import android.content.Context
+import android.graphics.Bitmap
 import java.io.*
 
 object FileUtil {
@@ -46,6 +47,21 @@ object FileUtil {
             filesList.add(file.name)
         }
         return filesList
+    }
+
+    fun saveBitmapOnStorage(context: Context, filename: String, bitmap: Bitmap): Boolean {
+        val folderToSave = context.filesDir.toString()
+        val file = File(folderToSave, filename)
+        try {
+            val fileOutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, fileOutputStream)
+            fileOutputStream.flush()
+            fileOutputStream.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return false
+        }
+        return true
     }
 
 }
