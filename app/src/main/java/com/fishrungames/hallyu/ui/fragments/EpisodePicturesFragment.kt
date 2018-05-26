@@ -53,7 +53,7 @@ class EpisodePicturesFragment : BaseFragment() {
 
     private fun getDataFromArguments() {
         if (episode == null && arguments != null) {
-            episode = arguments!!.getSerializable("episode") as ComicsEpisode
+            episode = arguments!!.getParcelable("episode") as ComicsEpisode
         }
     }
 

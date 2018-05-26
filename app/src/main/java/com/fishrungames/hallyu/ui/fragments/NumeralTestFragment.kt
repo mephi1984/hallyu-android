@@ -153,7 +153,11 @@ class NumeralTestFragment : BaseFragment() {
         showContentAnimation.duration = 500
         showContentAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) { }
-            override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.VISIBLE } }
+            override fun onAnimationEnd(animation: Animation) {
+                if (view == null) {
+                    return
+                }
+                getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.VISIBLE } }
             override fun onAnimationRepeat(animation: Animation) { }
         })
         getActivityInstance()?.runOnUiThread { contentCardView.visibility = View.VISIBLE }

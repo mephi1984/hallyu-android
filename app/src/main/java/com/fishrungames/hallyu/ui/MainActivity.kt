@@ -217,7 +217,7 @@ class MainActivity : AppCompatActivity() {
     fun openEpisodePicturesFragment(episode: ComicsEpisode) {
         val episodePicturesFragment = EpisodePicturesFragment()
         val bundle = Bundle()
-        bundle.putSerializable("episode", episode)
+        bundle.putParcelable("episode", episode)
         episodePicturesFragment.arguments = bundle
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
