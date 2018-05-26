@@ -3,6 +3,7 @@ package com.fishrungames.hallyu.ui.fragments
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -90,6 +91,9 @@ class ComicsFragment : BaseFragment() {
         for (image in images) {
             ImageLoader.getInstance().loadImage(image.imageUrl, object : SimpleImageLoadingListener() {
                 override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+                    if (getView() == null) {
+                        return
+                    }
                     FileUtil.saveBitmapOnStorage(context!!, image.name!!, loadedImage!!)
                 }
             })

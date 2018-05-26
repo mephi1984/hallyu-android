@@ -121,7 +121,11 @@ class EpisodePicturesFragment : BaseFragment() {
         showPictureAnimation.duration = 500
         showPictureAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) { }
-            override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.VISIBLE } }
+            override fun onAnimationEnd(animation: Animation) {
+                if (view == null) {
+                    return
+                }
+                getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.VISIBLE } }
             override fun onAnimationRepeat(animation: Animation) { }
         })
 

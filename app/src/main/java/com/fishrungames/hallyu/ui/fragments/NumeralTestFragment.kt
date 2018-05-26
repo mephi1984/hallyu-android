@@ -139,6 +139,9 @@ class NumeralTestFragment : BaseFragment() {
     }
 
     private fun showQuestion() {
+        if (view == null) {
+            return
+        }
         if (currentTestType == TEXT_TO_NUMBER_TEST) {
             testQuestionTextView.text = question?.numberStr
             answerLabelTextView.text = getString(R.string.text_numeralTestFragment_enterTheNumber)

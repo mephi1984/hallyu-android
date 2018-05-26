@@ -3,6 +3,7 @@ package com.fishrungames.hallyu.ui.fragments
 import android.graphics.PorterDuff
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -65,6 +66,9 @@ class CardTestFragment : BaseFragment() {
     }
 
     private fun showQuestion() {
+        if (view == null) {
+            return
+        }
         questionTextView.text = question?.Translation
         firstWordButton.text = question?.Word0
         secondWordButton.text = question?.Word1
@@ -74,7 +78,11 @@ class CardTestFragment : BaseFragment() {
         showContentAnimation.duration = 500
         showContentAnimation.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) { }
-            override fun onAnimationEnd(animation: Animation) { getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.VISIBLE } }
+            override fun onAnimationEnd(animation: Animation) {
+                if (view == null) {
+                    return
+                }
+                getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.VISIBLE } }
             override fun onAnimationRepeat(animation: Animation) { }
         })
         getActivityInstance()?.runOnUiThread { contentCardView.visibility = View.VISIBLE }
