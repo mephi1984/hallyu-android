@@ -75,7 +75,7 @@ class ComicsEpisodesFragment : BaseFragment() {
     }
 
     private fun getEpisodesListFromFile() {
-        val filename = FileConstants.getComicsFilename(comicsId!!)
+        val filename = FileConstants.getComicsEpisodesFilename(comicsId!!)
         val fileData = FileUtil.readFromFile(filename, context!!)
         if (fileData.isEmpty()) {
             return
@@ -86,7 +86,7 @@ class ComicsEpisodesFragment : BaseFragment() {
     }
 
     private fun writeEpisodesListToFile(episodes: List<ComicsEpisode>) {
-        val filename = FileConstants.getComicsFilename(comicsId!!)
+        val filename = FileConstants.getComicsEpisodesFilename(comicsId!!)
         val fileData = FileUtil.readFromFile(filename, context!!)
         if (fileData.isEmpty()) {
             val gson = Gson()

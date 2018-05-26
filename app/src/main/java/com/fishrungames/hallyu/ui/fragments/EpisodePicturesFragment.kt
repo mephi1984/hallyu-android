@@ -97,6 +97,7 @@ class EpisodePicturesFragment : BaseFragment() {
         currentLanguage = LANGUAGE_RUSSIAN
         setupNavigationLayout()
         showPicture()
+        pictureScrollView.fullScroll(ScrollView.FOCUS_UP)
     }
 
     private fun backBtnClicked() {
@@ -104,6 +105,7 @@ class EpisodePicturesFragment : BaseFragment() {
         currentLanguage = LANGUAGE_RUSSIAN
         setupNavigationLayout()
         showPicture()
+        pictureScrollView.fullScroll(ScrollView.FOCUS_UP)
     }
 
     private fun showPicture() {
@@ -114,7 +116,6 @@ class EpisodePicturesFragment : BaseFragment() {
             FileUtil.getBitmapFromStorage(context!!, translatedImages[currentPicture - 1].name!!)
         }
         pictureImageView.setImageBitmap(bitmap)
-        pictureScrollView.fullScroll(ScrollView.FOCUS_UP)
 
         val showPictureAnimation = AlphaAnimation(0.0f, 1.0f)
         showPictureAnimation.duration = 500

@@ -30,7 +30,7 @@ import com.nostra13.universalimageloader.core.ImageLoader
 class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val context: Context, private val comicsId: String, private val clickListener: ClickListener) : RecyclerView.Adapter<ComicsEpisodeAdapter.ViewHolder>() {
 
     private val cacheEpisodes: MutableList<ComicsEpisode> = mutableListOf()
-    private val STATE_LOAD = 0
+    private val STATE_NOT_LOADED = 0
     private val STATE_LOADING = 1
     private val STATE_LOADED = 2
 
@@ -61,7 +61,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
 
         loadMissingImages(episode, holder.ivLoadEpisode, holder.pbLoadingEpisode)
 
-        if (getEpisodeState(episode) == STATE_LOAD) {
+        if (getEpisodeState(episode) == STATE_NOT_LOADED) {
             holder.ivLoadEpisode.setOnClickListener {
                 if (NetworkUtil.isNetworkAvailable(context)) {
                     saveEpisodeImagesOnStorage(episode, getImagesToLoad(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
@@ -112,7 +112,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         val gson = Gson()
         val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
         val json = gson.toJson(cacheEpisodes, listType)
-        FileUtil.writeToFile(json, FileConstants.getComicsFilename(comicsId), context)
+        FileUtil.writeToFile(json, FileConstants.getComicsEpisodesFilename(comicsId), context)
     }
 
     private fun updateEpisodeInCache(episode: ComicsEpisode) {
@@ -120,11 +120,11 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         val gson = Gson()
         val listType = object : TypeToken<List<ComicsEpisode>>() {}.type
         val json = gson.toJson(cacheEpisodes, listType)
-        FileUtil.writeToFile(json, FileConstants.getComicsFilename(comicsId), context)
+        FileUtil.writeToFile(json, FileConstants.getComicsEpisodesFilename(comicsId), context)
     }
 
     private fun getEpisodesListFromFile() {
-        val filename = FileConstants.getComicsFilename(comicsId)
+        val filename = FileConstants.getComicsEpisodesFilename(comicsId)
         val fileData = FileUtil.readFromFile(filename, context)
         if (fileData.isEmpty()) {
             return
@@ -217,7 +217,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
     private fun getEpisodeState(episode: ComicsEpisode): Int {
         val loadedTextures = getLoadedImagesCount(episode)
         return if (loadedTextures == 0) {
-            STATE_LOAD
+            STATE_NOT_LOADED
         } else if (loadedTextures > 0 && loadedTextures < getEpisodeImages(episode).size) {
             STATE_LOADING
         } else {
@@ -228,7 +228,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
     private fun setEpisodeState(state: Int, loadEpisodeImage: ImageView, loadingEpisodeBar: ProgressBar) {
         (context as MainActivity)
         when (state) {
-            STATE_LOAD -> {
+            STATE_NOT_LOADED -> {
                 context.runOnUiThread { loadEpisodeImage.visibility = View.VISIBLE }
                 context.runOnUiThread { loadingEpisodeBar.visibility = View.INVISIBLE }
                 loadEpisodeImage.setImageResource(R.mipmap.ic_download_grey600_24dp)

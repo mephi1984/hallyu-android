@@ -6,12 +6,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.Comics
 import com.fishrungames.hallyu.models.responses.ComicsResponse
 import com.fishrungames.hallyu.ui.adapters.ComicsAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.FileUtil
+import com.fishrungames.hallyu.utils.NetworkUtil
 import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_comics.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -43,14 +48,40 @@ class ComicsFragment : BaseFragment() {
         comicsRecyclerView.adapter = comicsAdapter
         comicsRecyclerView.setHasFixedSize(true)
 
-        getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getComics().enqueue(getComicsCallback)
+        if (NetworkUtil.isNetworkAvailable(context!!)) {
+            getActivityInstance()?.showProgressBar()
+            newHallyuApi!!.getComics().enqueue(getComicsCallback)
+        } else {
+            getComicsListFromFile()
+        }
 
     }
 
     override fun onResume() {
         super.onResume()
         getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_comics)
+    }
+
+    private fun getComicsListFromFile() {
+        val filename = FileConstants.FILE_COMICS_DATA
+        val fileData = FileUtil.readFromFile(filename, context!!)
+        if (fileData.isEmpty()) {
+            return
+        }
+        val listType = object : TypeToken<List<Comics>>() {}.type
+        comics.addAll(Gson().fromJson(fileData, listType))
+        comicsAdapter?.notifyDataSetChanged()
+    }
+
+    private fun writeComicsListToFile(comicsList: List<Comics>) {
+        val filename = FileConstants.FILE_COMICS_DATA
+        val fileData = FileUtil.readFromFile(filename, context!!)
+        if (fileData.isEmpty()) {
+            val gson = Gson()
+            val listType = object : TypeToken<List<Comics>>(){}.type
+            val json = gson.toJson(comicsList, listType)
+            FileUtil.writeToFile(json, filename, context!!)
+        }
     }
 
     private val getComicsCallback = object : Callback<ComicsResponse> {
@@ -64,7 +95,8 @@ class ComicsFragment : BaseFragment() {
                 DialogUtil.showAlertDialog(context!!, comicsResponse.message!!)
                 return
             }
-            if (response.isSuccessful) {
+            if (response.isSuccessful && !comicsResponse.comics!!.isEmpty()) {
+                writeComicsListToFile(comicsResponse.comics!!)
                 comics.addAll(comicsResponse.comics!!)
                 comicsAdapter?.notifyDataSetChanged()
             } else {
