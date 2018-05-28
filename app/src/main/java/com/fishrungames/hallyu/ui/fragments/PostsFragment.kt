@@ -34,6 +34,7 @@ class PostsFragment : BaseFragment() {
         postAdapter = PostAdapter(posts, context!!, object : PostAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val post: Post = posts[position]
+                getActivityInstance()?.openPostDetailsFragment(post)
             }
         })
         postsRecyclerView.layoutManager = layoutManager

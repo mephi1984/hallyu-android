@@ -16,16 +16,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.util.Log
-import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.ComicsEpisode
-import com.fishrungames.hallyu.utils.FileUtil
+import com.fishrungames.hallyu.models.Post
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageScaleType
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator
-
-
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_COMICS = "fragmentComics"
     private val FRAGMENT_COMICS_EPISODES = "fragmentComicsEpisodes"
     private val FRAGMENT_EPISODE_PICTURES = "fragmentEpisodePictures"
+    private val FRAGMENT_POST_DETAILS = "fragmentPostDetails"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -127,6 +122,7 @@ class MainActivity : AppCompatActivity() {
     private fun initImageLoader() {
         val options = DisplayImageOptions.Builder()
                 .imageScaleType(ImageScaleType.EXACTLY)
+                .cacheOnDisk(true)
                 .build()
 
         val config = ImageLoaderConfiguration.Builder(this)
@@ -222,6 +218,17 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, episodePicturesFragment, FRAGMENT_EPISODE_PICTURES).addToBackStack(FRAGMENT_EPISODE_PICTURES)
+        ft.commit()
+    }
+
+    fun openPostDetailsFragment(post: Post) {
+        val postDetailsFragment = PostDetailsFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("post", post)
+        postDetailsFragment.arguments = bundle
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, postDetailsFragment, FRAGMENT_POST_DETAILS).addToBackStack(FRAGMENT_POST_DETAILS)
         ft.commit()
     }
 

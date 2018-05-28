@@ -3,18 +3,20 @@
     <string name="app_name">Корейская волна</string>
     
     <string name="menu.navigation.posts">Посты</string>
-    <string name="menu.navigation.dictionaryAndOther">Словарь и прочее</string>
+    <string name="menu.navigation.dictionary">Словарь</string>
     <string name="menu.navigation.other">Разное</string>
     <string name="menu.navigation.profile">Профиль</string>
 
     <string name="error.message.serverError">Ошибка сервера</string>
     <string name="error.message.networkError">Ошибка сети</string>
+    <string name="error.message.networkNotAvailable">Сеть недоступна</string>
 
     <string name="barTitle.main">Корейская волна</string>
     <string name="barTitle.numeralTest">Тест китайских числительных</string>
     <string name="barTitle.cardTest">Словарный тест</string>
     <string name="barTitle.comics">Комиксы с переводом</string>
     <string name="barTitle.comicsEpisodes">Эпизоды</string>
+    <string name="barTitle.postDetails">Пост</string>
 
     <string name="text.dictionaryFragment.enterWord">Введите слово или фразу на Корейском языке. Сервис подберет перевод</string>
     <string name="text.dictionaryFragment.translate">Перевести</string>

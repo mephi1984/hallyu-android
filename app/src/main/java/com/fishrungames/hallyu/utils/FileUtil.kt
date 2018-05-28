@@ -5,8 +5,6 @@ import android.graphics.Bitmap
 import java.io.*
 import android.graphics.BitmapFactory
 
-
-
 object FileUtil {
 
     fun writeToFile(data: String, filename: String, context: Context) {

@@ -66,7 +66,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
                 if (NetworkUtil.isNetworkAvailable(context)) {
                     saveEpisodeImagesOnStorage(episode, getImagesToLoad(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
                 } else {
-                    DialogUtil.showAlertDialog(context, context.getString(R.string.error_message_networkError))
+                    DialogUtil.showAlertDialog(context, context.getString(R.string.error_message_networkNotAvailable))
                 }
             }
         }
@@ -197,7 +197,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
             if (!filesList.contains(episodePicture.originalImage?.name)) {
                 imagesToLoad.add(episodePicture.originalImage!!)
             }
-            if (!filesList.contains(episodePicture.translatedImage?.name)) {
+            if (!filesList.contains(episodePicture.translatedImage?.name) && episodePicture.originalImage?.name != episodePicture.translatedImage?.name) {
                 imagesToLoad.add(episodePicture.translatedImage!!)
                 continue
             }

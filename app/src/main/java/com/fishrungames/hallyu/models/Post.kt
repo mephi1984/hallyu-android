@@ -1,6 +1,8 @@
 package com.fishrungames.hallyu.models
 
-class Post {
+import java.io.Serializable
+
+class Post : Serializable {
 
     var id: Int? = null
 

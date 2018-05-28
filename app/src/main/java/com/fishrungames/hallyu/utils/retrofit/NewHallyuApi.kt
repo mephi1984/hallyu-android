@@ -2,6 +2,7 @@ package com.fishrungames.hallyu.utils.retrofit
 
 import com.fishrungames.hallyu.models.responses.ComicsEpisodesResponse
 import com.fishrungames.hallyu.models.responses.ComicsResponse
+import com.fishrungames.hallyu.models.responses.PostCommentsResponse
 import com.fishrungames.hallyu.models.responses.PostsResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -17,5 +18,8 @@ interface NewHallyuApi {
 
     @GET("/news/getPosts")
     fun getPosts(@Query("id") id: String): Call<PostsResponse>
+
+    @GET("/news/getComments")
+    fun getComments(@Query ("id") postId: String): Call<PostCommentsResponse>
 
 }

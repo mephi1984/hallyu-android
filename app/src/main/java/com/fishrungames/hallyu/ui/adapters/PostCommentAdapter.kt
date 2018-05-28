@@ -10,15 +10,15 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.fishrungames.hallyu.R
-import com.fishrungames.hallyu.models.Post
+import com.fishrungames.hallyu.models.PostComment
 import com.fishrungames.hallyu.ui.MainActivity
 import com.nostra13.universalimageloader.core.ImageLoader
-import kotlinx.android.synthetic.main.item_post.view.*
+import kotlinx.android.synthetic.main.item_post_comment.view.*
 
-class PostAdapter(private val posts : List<Post>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<PostAdapter.ViewHolder>() {
+class PostCommentAdapter(private val comments : List<PostComment>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<PostCommentAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_post, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_post_comment, parent, false))
     }
 
     companion object {
@@ -26,16 +26,16 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val post : Post = posts[position]
+        val comment : PostComment= comments[position]
         mClickListener = clickListener
 
-        holder.tvPostDate.text = post.date.toString()
-        holder.tvPostTitle.text = post.header.toString()
-        holder.tvPostContent.text = post.text.toString()
+        holder.tvCommentUsername.text = comment.username.toString()
+        holder.tvCommentDate.text = comment.date.toString()
+        holder.tvCommentText.text = comment.text.toString()
 
-        if (post.images?.size!! > 0) {
+        if (comment.images?.size!! > 0) {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.VISIBLE }
-            ImageLoader.getInstance().displayImage(post.images!![0].imageUrl, holder.ivPost)
+            ImageLoader.getInstance().displayImage(comment.images!![0].imageUrl, holder.ivComment)
         } else {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.GONE }
         }
@@ -48,7 +48,7 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
     }
 
     override fun getItemCount(): Int {
-        return posts.size
+        return comments.size
     }
 
     interface ClickListener {
@@ -56,12 +56,12 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
     }
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val contentLayout: ConstraintLayout = view.postContentLayout
-        val tvPostDate: TextView = view.postDateTextView
-        val tvPostTitle: TextView = view.postTitleTextView
-        val imagesLayout: LinearLayout = view.postImagesLayout
-        val ivPost: ImageView = view.postImageView
-        val tvPostContent: TextView = view.postContentTextView
+        val contentLayout: ConstraintLayout = view.commentContentLayout
+        val tvCommentUsername: TextView = view.commentUsernameTextView
+        val tvCommentDate: TextView = view.commentDateTextView
+        val imagesLayout: LinearLayout = view.commentImagesLayout
+        val ivComment: ImageView = view.commentImageView
+        val tvCommentText: TextView = view.commentTextTextView
 
     }
 
