@@ -18,6 +18,8 @@ class Post : Serializable {
 
     var date: String? = null
 
+    var commentsCount: Int? = null
+
     var images: List<Image>? = null
 
 }

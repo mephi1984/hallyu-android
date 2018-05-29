@@ -1,12 +1,17 @@
 package com.fishrungames.hallyu.ui.fragments
 
 import android.os.Bundle
+import android.support.v7.app.ActionBar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Post
+import com.fishrungames.hallyu.models.PostCategory
+import com.fishrungames.hallyu.models.responses.PostCategoriesResponse
 import com.fishrungames.hallyu.models.responses.PostsResponse
 import com.fishrungames.hallyu.ui.adapters.PostAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
@@ -19,6 +24,10 @@ import retrofit2.Response
 
 class PostsFragment : BaseFragment() {
 
+    private var spinner: Spinner? = null
+    private var postCategoriesAdapter: ArrayAdapter<String>? = null
+    private var postCategoriesList: MutableList<PostCategory> = mutableListOf()
+    private var postCategories = arrayListOf<String>()
     private var posts: MutableList<Post> = mutableListOf()
     private var newHallyuApi: NewHallyuApi? = null
     private var postAdapter: PostAdapter? = null
@@ -41,47 +50,39 @@ class PostsFragment : BaseFragment() {
         postsRecyclerView.adapter = postAdapter
         postsRecyclerView.setHasFixedSize(true)
 
-//        searchPostsEditText.setOnEditorActionListener({ _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                searchPosts()
-//                return@setOnEditorActionListener true
-//            }
-//            false
-//        })
-//
-//        searchPostsImageView.setOnClickListener { searchPosts() }
+        spinner = Spinner(context!!)
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
         getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getPosts("1").enqueue(getPostsCallback)
+
+        newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
 
     }
-
 
     override fun onResume() {
         super.onResume()
-        getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_main)
+        setupActionBar()
     }
 
-//    private fun searchPosts() {
-//        getActivityInstance()?.hideInputMethod()
-//        val searchPostsViewLayoutParams = searchPostsCardView.layoutParams as ViewGroup.MarginLayoutParams
-//        val objectAnimator = ObjectAnimator.ofFloat(
-//                searchPostsCardView,
-//                "y",
-//                searchPostsCardView.y,
-//                0f + searchPostsViewLayoutParams.leftMargin)
-//        objectAnimator.duration = 200
-//        objectAnimator.addListener(object : Animator.AnimatorListener {
-//            override fun onAnimationStart(animation: Animator) { }
-//            override fun onAnimationCancel(animation: Animator) { }
-//            override fun onAnimationRepeat(animation: Animator) { }
-//            override fun onAnimationEnd(animation: Animator) {
-//                getActivityInstance()?.showProgressBar()
-//            }
-//        })
-//        objectAnimator.start()
-//    }
+    private fun setupActionBar() {
+
+        getActivityInstance()?.supportActionBar?.title = ""
+        getActivityInstance()?.supportActionBar?.navigationMode = ActionBar.NAVIGATION_MODE_LIST
+
+        if (spinner?.adapter == null) {
+            postCategoriesAdapter = ArrayAdapter(context!!, R.layout.spinner_item, postCategories)
+            postCategoriesAdapter!!.setDropDownViewResource(R.layout.spinner_drop_down_item)
+            spinner?.adapter = postCategoriesAdapter
+
+            getActivityInstance()?.supportActionBar?.setListNavigationCallbacks(postCategoriesAdapter, { itemPosition, _ ->
+                posts.clear()
+                postAdapter?.notifyDataSetChanged()
+                getActivityInstance()?.showProgressBar()
+                newHallyuApi!!.getPosts(postCategoriesList[itemPosition].id.toString()).enqueue(getPostsCallback)
+                true
+            })
+        }
+    }
 
     private val getPostsCallback = object : Callback<PostsResponse> {
         override fun onResponse(call: Call<PostsResponse>?, response: Response<PostsResponse>?) {
@@ -107,6 +108,26 @@ class PostsFragment : BaseFragment() {
             }
             getActivityInstance()?.hideProgressBar()
             DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_networkError))
+        }
+
+    }
+
+    private val getPostCategoriesCallback = object : Callback<PostCategoriesResponse> {
+        override fun onResponse(call: Call<PostCategoriesResponse>?, response: Response<PostCategoriesResponse>?) {
+            if (response?.isSuccessful!!) {
+                val postCategoriesResponse = response.body()
+                if (postCategoriesResponse?.result!! && postCategoriesResponse.categories?.size!! > 0) {
+                    postCategoriesList.addAll(postCategoriesResponse.categories!!)
+                    for (category in postCategoriesList) {
+                        postCategories.add(category.name!!)
+                    }
+                    postCategoriesAdapter?.notifyDataSetChanged()
+                }
+            }
+        }
+
+        override fun onFailure(call: Call<PostCategoriesResponse>?, t: Throwable?) {
+
         }
 
     }

@@ -32,6 +32,7 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
         holder.tvPostDate.text = post.date.toString()
         holder.tvPostTitle.text = post.header.toString()
         holder.tvPostContent.text = post.text.toString()
+        holder.tvPostCommentsCount.text = post.commentsCount.toString()
 
         if (post.images?.size!! > 0) {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.VISIBLE }
@@ -59,6 +60,7 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
         val contentLayout: ConstraintLayout = view.postContentLayout
         val tvPostDate: TextView = view.postDateTextView
         val tvPostTitle: TextView = view.postTitleTextView
+        val tvPostCommentsCount: TextView = view.postCommentsCountTextView
         val imagesLayout: LinearLayout = view.postImagesLayout
         val ivPost: ImageView = view.postImageView
         val tvPostContent: TextView = view.postContentTextView

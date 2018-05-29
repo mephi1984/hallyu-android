@@ -20,6 +20,10 @@ import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.models.Post
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageScaleType
+import com.fishrungames.hallyu.models.responses.PostCategoriesResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 

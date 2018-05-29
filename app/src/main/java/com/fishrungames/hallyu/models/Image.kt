@@ -1,6 +1,8 @@
 package com.fishrungames.hallyu.models
 
-class Image {
+import java.io.Serializable
+
+class Image : Serializable {
 
     var id: Int? = null
 

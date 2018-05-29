@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.models.Image
 import com.fishrungames.hallyu.models.PostComment
 import com.fishrungames.hallyu.ui.MainActivity
 import com.nostra13.universalimageloader.core.ImageLoader
@@ -29,9 +30,12 @@ class PostCommentAdapter(private val comments : List<PostComment>, val context: 
         val comment : PostComment= comments[position]
         mClickListener = clickListener
 
-        holder.tvCommentUsername.text = comment.username.toString()
+        holder.tvCommentUserFirstName.text = comment.firstName.toString()
+        holder.tvCommentUserLastName.text = comment.lastName.toString()
         holder.tvCommentDate.text = comment.date.toString()
         holder.tvCommentText.text = comment.text.toString()
+
+        ImageLoader.getInstance().displayImage(comment.photoUrl, holder.ivCommentUserPhoto)
 
         if (comment.images?.size!! > 0) {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.VISIBLE }
@@ -57,7 +61,9 @@ class PostCommentAdapter(private val comments : List<PostComment>, val context: 
 
     class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
         val contentLayout: ConstraintLayout = view.commentContentLayout
-        val tvCommentUsername: TextView = view.commentUsernameTextView
+        val tvCommentUserFirstName: TextView = view.commentUserFirstNameTextView
+        val tvCommentUserLastName: TextView = view.commentUserLastNameTextView
+        val ivCommentUserPhoto: ImageView = view.commentUserPhoto
         val tvCommentDate: TextView = view.commentDateTextView
         val imagesLayout: LinearLayout = view.commentImagesLayout
         val ivComment: ImageView = view.commentImageView
