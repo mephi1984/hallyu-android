@@ -59,7 +59,7 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
 
         setEpisodeState(getEpisodeState(episode), holder.ivLoadEpisode, holder.pbLoadingEpisode)
 
-        loadMissingImages(episode, holder.ivLoadEpisode, holder.pbLoadingEpisode)
+//        loadMissingImages(episode, holder.ivLoadEpisode, holder.pbLoadingEpisode)
 
         if (getEpisodeState(episode) == STATE_NOT_LOADED) {
             holder.ivLoadEpisode.setOnClickListener {
@@ -214,12 +214,21 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
         return imagesToLoad
     }
 
+//    private fun getEpisodeState(episode: ComicsEpisode): Int {
+//        val loadedTextures = getLoadedImagesCount(episode)
+//        return if (loadedTextures == 0) {
+//            STATE_NOT_LOADED
+//        } else if (loadedTextures > 0 && loadedTextures < getEpisodeImagesName(episode).size) {
+//            STATE_LOADING
+//        } else {
+//            STATE_LOADED
+//        }
+//    }
+
     private fun getEpisodeState(episode: ComicsEpisode): Int {
         val loadedTextures = getLoadedImagesCount(episode)
-        return if (loadedTextures == 0) {
+        return if (loadedTextures < getEpisodeImagesName(episode).size) {
             STATE_NOT_LOADED
-        } else if (loadedTextures > 0 && loadedTextures < getEpisodeImagesName(episode).size) {
-            STATE_LOADING
         } else {
             STATE_LOADED
         }

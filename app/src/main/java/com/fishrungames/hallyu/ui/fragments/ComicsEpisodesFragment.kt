@@ -45,9 +45,7 @@ class ComicsEpisodesFragment : BaseFragment() {
         episodeAdapter = ComicsEpisodeAdapter(episodes, context!!, comicsId!!, object : ComicsEpisodeAdapter.ClickListener {
             override fun onClick(position: Int, episodeState: Int) {
                 val episode: ComicsEpisode = episodes[position]
-                if (episodeState == 2) {
-                    getActivityInstance()?.openEpisodePicturesFragment(episode)
-                }
+                getActivityInstance()?.openEpisodePicturesFragment(episode)
             }
         })
         comicsEpisodesRecyclerView.layoutManager = layoutManager
@@ -65,6 +63,7 @@ class ComicsEpisodesFragment : BaseFragment() {
 
     override fun onResume() {
         super.onResume()
+        episodeAdapter?.notifyDataSetChanged()
         getActivityInstance()?.supportActionBar?.title = getString(R.string.barTitle_comicsEpisodes)
     }
 

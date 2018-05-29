@@ -1,5 +1,6 @@
 package com.fishrungames.hallyu.ui.fragments
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.models.ComicsImage
 import com.fishrungames.hallyu.utils.FileUtil
+import com.nostra13.universalimageloader.core.ImageLoader
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener
 import kotlinx.android.synthetic.main.fragment_episode_pictures.*
 
 class EpisodePicturesFragment : BaseFragment() {
@@ -110,12 +113,6 @@ class EpisodePicturesFragment : BaseFragment() {
 
     private fun showPicture() {
         getActivityInstance()?.runOnUiThread { pictureImageView.visibility = View.INVISIBLE }
-        val bitmap = if (currentLanguage == LANGUAGE_RUSSIAN) {
-            FileUtil.getBitmapFromStorage(context!!, originalImages[currentPicture - 1].name!!)
-        } else {
-            FileUtil.getBitmapFromStorage(context!!, translatedImages[currentPicture - 1].name!!)
-        }
-        pictureImageView.setImageBitmap(bitmap)
 
         val showPictureAnimation = AlphaAnimation(0.0f, 1.0f)
         showPictureAnimation.duration = 500
@@ -129,7 +126,32 @@ class EpisodePicturesFragment : BaseFragment() {
             override fun onAnimationRepeat(animation: Animation) { }
         })
 
-        pictureImageView.startAnimation(showPictureAnimation)
+        val bitmap: Bitmap?
+        val image: ComicsImage?
+
+        if (currentLanguage == LANGUAGE_RUSSIAN) {
+            bitmap = FileUtil.getBitmapFromStorage(context!!, originalImages[currentPicture - 1].name!!)
+            image = originalImages[currentPicture - 1]
+        } else {
+            bitmap = FileUtil.getBitmapFromStorage(context!!, translatedImages[currentPicture - 1].name!!)
+            image = translatedImages[currentPicture - 1]
+        }
+
+        if (bitmap == null) {
+            getActivityInstance()?.showProgressBar()
+            ImageLoader.getInstance().loadImage(image.imageUrl, object : SimpleImageLoadingListener() {
+                override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+                    getActivityInstance()?.hideProgressBar()
+                    pictureImageView.setImageBitmap(loadedImage)
+                    pictureImageView.startAnimation(showPictureAnimation)
+                    FileUtil.saveBitmapOnStorage(context!!, image.name!!, loadedImage!!)
+                }
+            })
+        } else {
+            pictureImageView.setImageBitmap(bitmap)
+            pictureImageView.startAnimation(showPictureAnimation)
+        }
+
     }
 
 }

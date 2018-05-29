@@ -37,6 +37,7 @@ class PostAdapter(private val posts : List<Post>, val context: Context, private 
         if (post.images?.size!! > 0) {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.VISIBLE }
             ImageLoader.getInstance().displayImage(post.images!![0].imageUrl, holder.ivPost)
+
         } else {
             (context as MainActivity).runOnUiThread { holder.imagesLayout.visibility = View.GONE }
         }
