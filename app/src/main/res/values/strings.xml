@@ -37,6 +37,10 @@
     <string name="text.numeralTestFragment.ok">OK</string>
     <string name="text.numeralTestFragment.next">Далее</string>
     <string name="text.numeralTestFragment.start">Начать</string>
+    <string name="text.cardTestFragment.dictionarySize">Размер словаря:</string>
+    <string name="text.cardTestFragment.oneHundredWords">100 слов</string>
+    <string name="text.cardTestFragment.thousandWords">1000 слов</string>
+    <string name="text.cardTestFragment.tenThousandWords">10000 слов</string>
     <string name="text.cardTestFragment.next">Далее</string>
     <string name="text.episodePicturesFragment.back">Назад</string>
     <string name="text.episodePicturesFragment.next">Далее</string>

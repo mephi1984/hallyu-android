@@ -1,15 +1,14 @@
 package com.fishrungames.hallyu.ui.fragments
 
-import android.graphics.PorterDuff
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import android.widget.Button
+import android.widget.RelativeLayout
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.OnRequestCard
 import com.fishrungames.hallyu.models.requests.CardTestQuestionRequest
@@ -24,9 +23,11 @@ import retrofit2.Response
 
 class CardTestFragment : BaseFragment() {
 
+    private var dictionarySize: Int = 100
     private var hallyuApi: HallyuApi? = null
     private var question: OnRequestCard? = null
-    private var answerButtons: MutableList<Button> = mutableListOf()
+    private var answerLayouts: MutableList<RelativeLayout> = mutableListOf()
+    private var dictionaryLayouts: MutableList<RelativeLayout> = mutableListOf()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_card_test, container, false)
@@ -35,15 +36,24 @@ class CardTestFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        answerButtons.add(firstWordButton)
-        answerButtons.add(secondWordButton)
-        answerButtons.add(thirdWordButton)
-        answerButtons.add(fourthWordButton)
+        answerLayouts.add(firstWordLayout)
+        answerLayouts.add(secondWordLayout)
+        answerLayouts.add(thirdWordLayout)
+        answerLayouts.add(fourthWordLayout)
 
-        firstWordButton.setOnClickListener { checkAnswer( 0) }
-        secondWordButton.setOnClickListener { checkAnswer(1) }
-        thirdWordButton.setOnClickListener { checkAnswer(2) }
-        fourthWordButton.setOnClickListener { checkAnswer(3) }
+        dictionaryLayouts.add(oneHundredWordsLayout)
+        dictionaryLayouts.add(thousandWordsLayout)
+        dictionaryLayouts.add(tenThousandWordsLayout)
+
+        firstWordLayout.setOnClickListener { checkAnswer( 0) }
+        secondWordLayout.setOnClickListener { checkAnswer(1) }
+        thirdWordLayout.setOnClickListener { checkAnswer(2) }
+        fourthWordLayout.setOnClickListener { checkAnswer(3) }
+
+        oneHundredWordsLayout.setOnClickListener { setDictionarySize(100, oneHundredWordsLayout) }
+        thousandWordsLayout.setOnClickListener { setDictionarySize(1000, thousandWordsLayout) }
+        tenThousandWordsLayout.setOnClickListener { setDictionarySize(10000, tenThousandWordsLayout) }
+
         nextButton.setOnClickListener { getQuestion() }
 
         hallyuApi = RetrofitController.getHallyuApi()
@@ -61,7 +71,7 @@ class CardTestFragment : BaseFragment() {
         resetQuestionContent()
         getActivityInstance()?.showProgressBar()
         val cardTestQuestionRequest = CardTestQuestionRequest()
-        cardTestQuestionRequest.RequestCard = 100
+        cardTestQuestionRequest.RequestCard = dictionarySize
         hallyuApi!!.getCardTestQuestion(cardTestQuestionRequest).enqueue(getCardTestQuestionCallback)
     }
 
@@ -70,10 +80,10 @@ class CardTestFragment : BaseFragment() {
             return
         }
         questionTextView.text = question?.Translation
-        firstWordButton.text = question?.Word0
-        secondWordButton.text = question?.Word1
-        thirdWordButton.text = question?.Word2
-        fourthWordButton.text = question?.Word3
+        firstWordTextView.text = question?.Word0
+        secondWordTextView.text = question?.Word1
+        thirdWordTextView.text = question?.Word2
+        fourthWordTextView.text = question?.Word3
         val showContentAnimation = AlphaAnimation(0.0f, 1.0f)
         showContentAnimation.duration = 500
         showContentAnimation.setAnimationListener(object : Animation.AnimationListener {
@@ -91,48 +101,69 @@ class CardTestFragment : BaseFragment() {
 
     private fun checkAnswer(index: Int) {
         if (index == question?.CorrectWord) {
-            setButtonColor(getAnswerButton(index), R.color.colorRight)
+            setLayoutDrawable(getAnswerLayout(index), getDrawable(R.drawable.shape_card_test_right))
         } else {
-            setButtonColor(getAnswerButton(index), R.color.colorWrong)
-            setButtonColor(getAnswerButton(question?.CorrectWord!!), R.color.colorRight)
+            setLayoutDrawable(getAnswerLayout(index), getDrawable(R.drawable.shape_card_test_wrong))
+            setLayoutDrawable(getAnswerLayout(question?.CorrectWord!!), getDrawable(R.drawable.shape_card_test_right))
         }
-        disableAnswerButtons()
+        disableAnswerLayouts()
     }
 
-    private fun setButtonColor(button: Button, color: Int) {
-        button.background.setColorFilter(ContextCompat.getColor(context!!, color), PorterDuff.Mode.MULTIPLY)
+    private fun getDrawable(id: Int): Drawable {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context!!.resources.getDrawable(id, context!!.theme)
+        } else {
+            context!!.resources.getDrawable(id)
+        }
     }
 
-    private fun getAnswerButton(index: Int): Button {
+
+    private fun setLayoutDrawable(layout: RelativeLayout, drawable: Drawable) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+            layout.setBackgroundDrawable(drawable)
+        } else {
+            layout.background = drawable
+        }
+    }
+
+    private fun getAnswerLayout(index: Int): RelativeLayout {
         return when (index) {
-            0 -> firstWordButton
-            1 -> secondWordButton
-            2 -> thirdWordButton
-            else -> fourthWordButton
+            0 -> firstWordLayout
+            1 -> secondWordLayout
+            2 -> thirdWordLayout
+            else -> fourthWordLayout
         }
     }
 
-    private fun disableAnswerButtons() {
-        for (button in answerButtons) {
-            button.isEnabled = false
+    private fun setDictionarySize(size: Int, dictionaryLayout: RelativeLayout) {
+        dictionarySize = size
+        for (layout in dictionaryLayouts) {
+            setLayoutDrawable(layout, getDrawable(R.drawable.shape_card_test_dictionary_default))
+        }
+        setLayoutDrawable(dictionaryLayout, getDrawable(R.drawable.shape_card_test_dictionary_selected))
+    }
+
+    private fun disableAnswerLayouts() {
+        for (layout in answerLayouts) {
+            layout.isEnabled = false
         }
     }
 
-    private fun enableAnswerButtons() {
-        for (button in answerButtons) {
-            button.isEnabled = true
+    private fun enableAnswerLayouts() {
+        for (layout in answerLayouts) {
+            layout.isEnabled = true
         }
     }
 
-    private fun setDefaultAnswerButtonsColor() {
-        for (button in answerButtons) {
-            setButtonColor(button, R.color.colorAccent)
+    private fun setDefaultAnswerLayoutsDrawable() {
+        for (layout in answerLayouts) {
+            setLayoutDrawable(layout, getDrawable(R.drawable.shape_card_test_default))
         }
     }
 
     private fun resetQuestionContent() {
-        setDefaultAnswerButtonsColor()
-        enableAnswerButtons()
+        setDefaultAnswerLayoutsDrawable()
+        enableAnswerLayouts()
         getActivityInstance()?.runOnUiThread { contentCardView.visibility = View.INVISIBLE }
         getActivityInstance()?.runOnUiThread { contentLayout.visibility = View.INVISIBLE }
     }

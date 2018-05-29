@@ -1,21 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:clickable="true"
     android:focusable="true">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text.cardTestFragment.dictionarySize"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:id="@+id/oneHundredWordsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_card_test_dictionary_selected"
+        app:layout_constraintEnd_toStartOf="@+id/thousandWordsLayout"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="@string/text.cardTestFragment.oneHundredWords"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/thousandWordsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_card_test_dictionary_default"
+        app:layout_constraintEnd_toStartOf="@+id/tenThousandWordsLayout"
+        app:layout_constraintStart_toEndOf="@+id/oneHundredWordsLayout"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:ellipsize="end"
+            android:text="@string/text.cardTestFragment.thousandWords"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tenThousandWordsLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_card_test_dictionary_default"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/thousandWordsLayout"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:text="@string/text.cardTestFragment.tenThousandWords"
+            android:textAlignment="center"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
     <android.support.v7.widget.CardView
         android:id="@+id/contentCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/oneHundredWordsLayout">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/contentLayout"
@@ -39,9 +136,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <Button
-                android:id="@+id/firstWordButton"
-                style="@style/Widget.AppCompat.Button.Colored"
+            <RelativeLayout
+                android:id="@+id/firstWordLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -49,15 +145,28 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="32dp"
-                app:layout_constraintEnd_toStartOf="@+id/secondWordButton"
+                android:background="@drawable/shape_card_test_default"
+                app:layout_constraintEnd_toStartOf="@+id/secondWordLayout"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/questionTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/questionTextView">
 
-            <Button
-                android:id="@+id/secondWordButton"
-                style="@style/Widget.AppCompat.Button.Colored"
+                <TextView
+                    android:id="@+id/firstWordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/secondWordLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -65,14 +174,27 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
+                android:background="@drawable/shape_card_test_default"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toEndOf="@+id/firstWordButton"
-                app:layout_constraintTop_toBottomOf="@+id/questionTextView" />
+                app:layout_constraintStart_toEndOf="@+id/firstWordLayout"
+                app:layout_constraintTop_toBottomOf="@+id/questionTextView">
 
-            <Button
-                android:id="@+id/thirdWordButton"
-                style="@style/Widget.AppCompat.Button.Colored"
+                <TextView
+                    android:id="@+id/secondWordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/thirdWordLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
@@ -81,15 +203,29 @@
                 android:layout_marginRight="8dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/shape_card_test_default"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/fourthWordButton"
-                app:layout_constraintHorizontal_chainStyle="spread"
+                app:layout_constraintEnd_toStartOf="@+id/fourthWordLayout"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstWordButton" />
+                app:layout_constraintTop_toBottomOf="@+id/firstWordLayout">
 
-            <Button
-                android:id="@+id/fourthWordButton"
-                style="@style/Widget.AppCompat.Button.Colored"
+                <TextView
+                    android:id="@+id/thirdWordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/fourthWordLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="32dp"
@@ -98,12 +234,25 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/shape_card_test_default"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toEndOf="@+id/thirdWordButton"
-                app:layout_constraintTop_toBottomOf="@+id/secondWordButton" />
+                app:layout_constraintStart_toEndOf="@+id/thirdWordLayout"
+                app:layout_constraintTop_toBottomOf="@+id/secondWordLayout">
+
+                <TextView
+                    android:id="@+id/fourthWordTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
 
         </android.support.constraint.ConstraintLayout>
 
