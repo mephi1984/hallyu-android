@@ -46,8 +46,15 @@ class PostDetailsFragment : BaseFragment() {
         commentsRecyclerView.setHasFixedSize(true)
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
-        getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getComments(post?.id.toString()).enqueue(getCommentsCalback)
+
+        if (post?.commentsCount!! > 0) {
+            getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.GONE }
+            getActivityInstance()?.showProgressBar()
+            newHallyuApi!!.getComments(post?.id.toString()).enqueue(getCommentsCallback)
+        } else {
+            getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.VISIBLE }
+        }
+
 
     }
 
@@ -68,7 +75,7 @@ class PostDetailsFragment : BaseFragment() {
         }
     }
 
-    private val getCommentsCalback = object : Callback<PostCommentsResponse> {
+    private val getCommentsCallback = object : Callback<PostCommentsResponse> {
         override fun onResponse(call: Call<PostCommentsResponse>?, response: Response<PostCommentsResponse>?) {
             if (activity == null) {
                 return

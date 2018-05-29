@@ -40,6 +40,7 @@
     <string name="text.cardTestFragment.next">Далее</string>
     <string name="text.episodePicturesFragment.back">Назад</string>
     <string name="text.episodePicturesFragment.next">Далее</string>
+    <string name="text.postDetailsFragment.noComments">Комментариев к данному посту нет</string>
     
     <string name="hint.numeralTestFragment.answer">Ответ</string>
     
