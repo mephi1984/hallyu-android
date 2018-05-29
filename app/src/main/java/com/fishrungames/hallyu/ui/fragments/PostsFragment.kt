@@ -9,14 +9,18 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.constants.FileConstants
 import com.fishrungames.hallyu.models.Post
 import com.fishrungames.hallyu.models.PostCategory
 import com.fishrungames.hallyu.models.responses.PostCategoriesResponse
 import com.fishrungames.hallyu.models.responses.PostsResponse
 import com.fishrungames.hallyu.ui.adapters.PostAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.FileUtil
 import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_posts.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,9 +56,10 @@ class PostsFragment : BaseFragment() {
 
         spinner = Spinner(context!!)
 
+        getPostCategoriesDataFromFile()
+
         newHallyuApi = RetrofitController.getNewHallyuApi()
         getActivityInstance()?.showProgressBar()
-
         newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
 
     }
@@ -82,6 +87,30 @@ class PostsFragment : BaseFragment() {
                 true
             })
         }
+    }
+
+    private fun getPostCategoriesDataFromFile() {
+        val filename = FileConstants.FILE_POST_CATEGORIES
+        val fileData = FileUtil.readFromFile(filename, context!!)
+        if (fileData.isEmpty()) {
+            return
+        }
+        val listType = object : TypeToken<List<PostCategory>>() {}.type
+        postCategoriesList.addAll(Gson().fromJson(fileData, listType))
+        if (postCategoriesList.size > 0) {
+            for (category in postCategoriesList) {
+                postCategories.add(category.name!!)
+            }
+            postCategoriesAdapter?.notifyDataSetChanged()
+        }
+    }
+
+    private fun writePostCategoriesListToFile(postCategoriesList: List<PostCategory>) {
+        val filename = FileConstants.FILE_POST_CATEGORIES
+        val gson = Gson()
+        val listType = object : TypeToken<List<PostCategory>>(){}.type
+        val json = gson.toJson(postCategoriesList, listType)
+        FileUtil.writeToFile(json, filename, context!!)
     }
 
     private val getPostsCallback = object : Callback<PostsResponse> {
@@ -117,11 +146,14 @@ class PostsFragment : BaseFragment() {
             if (response?.isSuccessful!!) {
                 val postCategoriesResponse = response.body()
                 if (postCategoriesResponse?.result!! && postCategoriesResponse.categories?.size!! > 0) {
-                    postCategoriesList.addAll(postCategoriesResponse.categories!!)
-                    for (category in postCategoriesList) {
-                        postCategories.add(category.name!!)
+                    writePostCategoriesListToFile(postCategoriesResponse.categories!!)
+                    if (postCategoriesList.size == 0) {
+                        postCategoriesList.addAll(postCategoriesResponse.categories!!)
+                        for (category in postCategoriesList) {
+                            postCategories.add(category.name!!)
+                        }
+                        postCategoriesAdapter?.notifyDataSetChanged()
                     }
-                    postCategoriesAdapter?.notifyDataSetChanged()
                 }
             }
         }
