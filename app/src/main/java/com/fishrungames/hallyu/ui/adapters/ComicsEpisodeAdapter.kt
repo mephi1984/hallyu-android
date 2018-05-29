@@ -82,6 +82,10 @@ class ComicsEpisodeAdapter(private val episodes : List<ComicsEpisode>, val conte
     }
 
     private fun saveEpisodeImagesOnStorage(episode: ComicsEpisode, imagesList: List<ComicsImage>, loadEpisodeImage: ImageView, loadingEpisodeBar: ProgressBar) {
+        if (imagesList.isEmpty()) {
+            setEpisodeState(STATE_LOADED, loadEpisodeImage, loadingEpisodeBar)
+            return
+        }
         setEpisodeState(STATE_LOADING, loadEpisodeImage, loadingEpisodeBar)
         val loadedImages: MutableList<ComicsImage> = mutableListOf()
         for (image in imagesList) {
