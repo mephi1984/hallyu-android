@@ -143,6 +143,9 @@ class PostsFragment : BaseFragment() {
 
     private val getPostCategoriesCallback = object : Callback<PostCategoriesResponse> {
         override fun onResponse(call: Call<PostCategoriesResponse>?, response: Response<PostCategoriesResponse>?) {
+            if (activity == null) {
+                return
+            }
             if (response?.isSuccessful!!) {
                 val postCategoriesResponse = response.body()
                 if (postCategoriesResponse?.result!! && postCategoriesResponse.categories?.size!! > 0) {
@@ -159,7 +162,9 @@ class PostsFragment : BaseFragment() {
         }
 
         override fun onFailure(call: Call<PostCategoriesResponse>?, t: Throwable?) {
-
+            if (activity == null) {
+                return
+            }
         }
 
     }
