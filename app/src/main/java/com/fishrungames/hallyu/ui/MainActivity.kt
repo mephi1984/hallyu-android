@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.FragmentTransaction
 import android.view.View
@@ -77,6 +78,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+    }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
@@ -146,7 +151,7 @@ class MainActivity : AppCompatActivity() {
         val postsFragment = PostsFragment()
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.replace(R.id.container, postsFragment, FRAGMENT_POSTS)
-        ft.commit()
+        ft.commitAllowingStateLoss()
     }
 
     private fun replaceToDictionaryFragment() {
