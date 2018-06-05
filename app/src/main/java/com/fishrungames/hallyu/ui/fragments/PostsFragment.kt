@@ -69,6 +69,7 @@ class PostsFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         if (!barTitle.isEmpty()) {
+            hidePostCategories()
             getActivityInstance()?.supportActionBar?.title = barTitle
         }
     }
@@ -168,7 +169,8 @@ class PostsFragment : BaseFragment() {
                 val postCategoriesResponse = response.body()
                 if (postCategoriesResponse?.result!! && postCategoriesResponse.categories?.size!! > 0) {
                     postCategories.addAll(postCategoriesResponse.categories!!)
-                    getActivityInstance()?.supportActionBar?.title = postCategories[0].name
+                    barTitle = postCategories[0].name.toString()
+                    getActivityInstance()?.supportActionBar?.title = barTitle
                     postCategoryAdapter?.notifyDataSetChanged()
                 }
             }
