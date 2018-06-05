@@ -2,9 +2,7 @@ package com.fishrungames.hallyu.ui.fragments
 
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Post
 import com.fishrungames.hallyu.models.PostComment
@@ -24,6 +22,11 @@ class PostDetailsFragment : BaseFragment() {
     private var newHallyuApi: NewHallyuApi? = null
     private var postCommentAdapter: PostCommentAdapter? = null
     private var post: Post? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_post_details, container, false)
@@ -56,6 +59,11 @@ class PostDetailsFragment : BaseFragment() {
         }
 
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        menu?.clear()
     }
 
     override fun onResume() {
