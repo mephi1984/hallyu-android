@@ -28,6 +28,7 @@ class PostsFragment : BaseFragment() {
     private var posts: MutableList<Post> = mutableListOf()
     private var newHallyuApi: NewHallyuApi? = null
     private var categoriesIsShowing: Boolean = false
+    private var barTitle: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +66,13 @@ class PostsFragment : BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!barTitle.isEmpty()) {
+            getActivityInstance()?.supportActionBar?.title = barTitle
+        }
+    }
+
     private fun initPostRecyclerView() {
         val postLayoutManager = LinearLayoutManager(context!!)
         postAdapter = PostAdapter(posts, context!!, object : PostAdapter.ClickListener {
@@ -86,7 +94,8 @@ class PostsFragment : BaseFragment() {
                 hidePostCategories()
                 posts.clear()
                 postAdapter?.notifyDataSetChanged()
-                getActivityInstance()?.supportActionBar?.title = category.name
+                barTitle = category.name.toString()
+                getActivityInstance()?.supportActionBar?.title = barTitle
                 getActivityInstance()?.showProgressBar()
                 newHallyuApi!!.getPosts(category.id.toString()).enqueue(getPostsCallback)
             }
