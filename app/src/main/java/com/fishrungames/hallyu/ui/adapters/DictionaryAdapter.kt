@@ -45,13 +45,24 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
 
     @SuppressLint("InflateParams")
     private fun addWordLayout(word: Word, wordsLayout: LinearLayout) {
+
+        var firstWord = true
+
         for (translatedWord in word.resultRecord!!) {
 
             (context as MainActivity)
 
             val wordItem = LayoutInflater.from(context).inflate(R.layout.item_dictionary_word, null)
 
-            wordItem.wordTextView.text = translatedWord.originalWord.toString()
+            if (firstWord) {
+                context.runOnUiThread { wordItem.wordTextView.visibility = View.VISIBLE }
+                wordItem.wordTextView.text = translatedWord.originalWord.toString()
+                firstWord = false
+            } else {
+                context.runOnUiThread { wordItem.wordTextView.visibility = View.GONE }
+            }
+
+
             wordItem.firstWordTextView.text = translatedWord.originalWord.toString()
             wordItem.secondWordTextView.text = translatedWord.dictStruct?.base.toString()
 
@@ -97,6 +108,7 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
             }
 
             wordsLayout.wordsLayout.addView(wordItem)
+
         }
     }
 
