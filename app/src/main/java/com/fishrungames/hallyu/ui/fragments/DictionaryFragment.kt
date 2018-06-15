@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.dictionary.DictionaryResponse
 import com.fishrungames.hallyu.models.dictionary.Word
@@ -60,10 +62,32 @@ class DictionaryFragment : BaseFragment() {
         dictionaryRecyclerView.setHasFixedSize(true)
     }
 
+
+    private fun hideDictionaryRecycler() {
+        getActivityInstance()?.runOnUiThread { dictionaryRecyclerView.visibility = View.INVISIBLE }
+    }
+
+    private fun showDictionaryRecycler() {
+        val showContentAnimation = AlphaAnimation(0.0f, 1.0f)
+        showContentAnimation.duration = 800
+        showContentAnimation.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationStart(animation: Animation) { }
+            override fun onAnimationEnd(animation: Animation) {
+                if (view == null) {
+                    return
+                }
+                getActivityInstance()?.runOnUiThread { dictionaryRecyclerView.visibility = View.VISIBLE }
+            }
+            override fun onAnimationRepeat(animation: Animation) { }
+        })
+        dictionaryRecyclerView.startAnimation(showContentAnimation)
+    }
+
     private fun translateText() {
         if (textInKoreanEditText.text.isEmpty()) {
             return
         }
+        hideDictionaryRecycler()
         getActivityInstance()?.hideInputMethod()
         words.clear()
         dictionaryAdapter?.notifyDataSetChanged()
@@ -87,6 +111,7 @@ class DictionaryFragment : BaseFragment() {
             Log.d("myLog", "succeed")
             words.addAll(dictionaryResponse?.resultTable!!)
             dictionaryAdapter?.notifyDataSetChanged()
+            showDictionaryRecycler()
         }
 
         override fun onFailure(call: Call<DictionaryResponse>?, t: Throwable?) {
