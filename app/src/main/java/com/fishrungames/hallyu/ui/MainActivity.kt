@@ -21,6 +21,11 @@ import com.fishrungames.hallyu.models.ComicsEpisode
 import com.fishrungames.hallyu.models.Post
 import com.nostra13.universalimageloader.core.DisplayImageOptions
 import com.nostra13.universalimageloader.core.assist.ImageScaleType
+import com.vk.sdk.api.VKError
+import com.vk.sdk.VKAccessToken
+import com.vk.sdk.VKCallback
+import com.vk.sdk.VKSdk
+import android.content.Intent
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -102,6 +108,18 @@ class MainActivity : AppCompatActivity() {
         val currentFragmentBackStack = supportFragmentManager.getBackStackEntryAt(backStackCount - 1).name
 
         super.onBackPressed()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
+                    override fun onResult(res: VKAccessToken) {
+                        Log.d("VKLog", VKAccessToken.currentToken().userId)
+                        Log.d("VKLog", VKAccessToken.currentToken().accessToken)
+                    }
+                    override fun onError(error: VKError) {}
+                })) {
+        }
     }
 
     @SuppressLint("RestrictedApi")

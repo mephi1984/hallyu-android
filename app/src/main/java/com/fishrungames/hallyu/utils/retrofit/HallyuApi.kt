@@ -1,5 +1,6 @@
 package com.fishrungames.hallyu.utils.retrofit
 
+import com.fishrungames.hallyu.models.dictionary.DictionaryResponse
 import com.fishrungames.hallyu.models.requests.CardTestQuestionRequest
 import com.fishrungames.hallyu.models.requests.NumeralTestQuestionRequest
 import com.fishrungames.hallyu.models.requests.TranslateTextRequest
@@ -19,6 +20,6 @@ interface HallyuApi {
     fun getCardTestQuestion(@Body request: CardTestQuestionRequest): Call<CardTestQuestionResponse>
 
     @POST("/translate")
-    fun translateKoreanText(@Body request: TranslateTextRequest): Call<TranslateTextResponse>
+    fun translateKoreanText(@Body request: TranslateTextRequest): Call<DictionaryResponse>
 
 }

@@ -1,7 +1,9 @@
 <resources>
     
     <string name="app_name">Корейская волна</string>
-    
+
+    <integer name="com_vk_sdk_AppId">4372224</integer>
+
     <string name="menu.navigation.posts">Посты</string>
     <string name="menu.navigation.dictionary">Словарь</string>
     <string name="menu.navigation.other">Разное</string>
@@ -21,6 +23,8 @@
     <string name="text.dictionaryFragment.translate">Перевести</string>
     <string name="text.dictionaryFragment.clear">Очистить</string>
     <string name="text.dictionaryFragment.textInKorean">Текст на Корейском</string>
+    <string name="text.dictionaryFragment.wordMeanings">Значения:</string>
+    <string name="text.dictionaryFragment.wordLessons">Уроки по теме:</string>
     <string name="text.otherFragment.numeralTest">Тесты китайских числительных</string>
     <string name="text.otherFragment.numberToTextTest">Число → текст</string>
     <string name="text.otherFragment.textToNumberTest">Текст → число</string>
