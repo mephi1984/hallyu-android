@@ -62,7 +62,6 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
                 context.runOnUiThread { wordItem.wordTextView.visibility = View.GONE }
             }
 
-
             wordItem.firstWordTextView.text = translatedWord.originalWord.toString()
             wordItem.secondWordTextView.text = translatedWord.dictStruct?.base.toString()
 

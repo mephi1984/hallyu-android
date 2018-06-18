@@ -108,10 +108,14 @@ class DictionaryFragment : BaseFragment() {
             }
             getActivityInstance()?.hideProgressBar()
             val dictionaryResponse = response?.body()
-            Log.d("myLog", "succeed")
-            words.addAll(dictionaryResponse?.resultTable!!)
-            dictionaryAdapter?.notifyDataSetChanged()
-            showDictionaryRecycler()
+            val resultTable = dictionaryResponse?.resultTable
+
+            if (resultTable != null) {
+                words.addAll(dictionaryResponse.resultTable!!)
+                dictionaryAdapter?.notifyDataSetChanged()
+                showDictionaryRecycler()
+            }
+
         }
 
         override fun onFailure(call: Call<DictionaryResponse>?, t: Throwable?) {
