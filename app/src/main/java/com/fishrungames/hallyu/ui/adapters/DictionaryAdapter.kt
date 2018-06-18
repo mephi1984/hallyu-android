@@ -2,58 +2,185 @@ package com.fishrungames.hallyu.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.os.Build
+import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.models.dictionary.CompoundVerb
 import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.dictionary.Word
 import com.fishrungames.hallyu.ui.MainActivity
+import com.fishrungames.hallyu.utils.AnimationUtil
 import kotlinx.android.synthetic.main.item_dictionary.view.*
+import kotlinx.android.synthetic.main.item_dictionary_compound_verb.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_lesson.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_meaning.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_verbose.view.*
 
-class DictionaryAdapter(private val words : List<Word>, val context: Context, private val clickListener: LessonClickListener) : RecyclerView.Adapter<DictionaryAdapter.ViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_dictionary, parent, false))
+class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
+                        private val words : List<Word>,
+                        val context: Context,
+                        private val clickListener: LessonClickListener)
+    : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val wordsHolder = WordsViewHolder(LayoutInflater.from(context).inflate(R.layout.item_dictionary, parent, false))
+        val compoundVerbHolder = CompoundVerbsViewHolder(LayoutInflater.from(context).inflate(R.layout.item_dictionary_compound_verb, parent, false))
+        when (viewType) {
+            TYPE_COMPOUND_VERBS -> return compoundVerbHolder
+            TYPE_WORDS -> return wordsHolder
+        }
+        return wordsHolder
     }
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        var mContext: Context? = null
         var lessonClickListener: LessonClickListener? = null
+        const val TYPE_COMPOUND_VERBS = 0
+        const val TYPE_WORDS = 1
+
+        const val BLOCK_NONE = 0
+        const val BLOCK_MAIN = 1
+        const val BLOCK_SECOND = 2
+
+        fun setTextColorByWordType(textView: TextView, wordType: String) {
+            when (wordType) {
+                "NOUN"              ->  textView.setTextColor(0xffff8284.toInt())
+                "VERB"              ->  textView.setTextColor(0xff008000.toInt())
+                "SPECIAL"           ->  textView.setTextColor(0xff551a8b.toInt())
+                "CHINESE_NUMBER"    ->  return
+            }
+        }
+
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
+        mContext = context
         lessonClickListener = clickListener
+        val viewType = holder.itemViewType
 
-        val word = words[position]
+        when (viewType) {
+            TYPE_COMPOUND_VERBS -> {
+                holder as CompoundVerbsViewHolder
+                val verb = compoundVerbs[position]
 
-        holder.wordsLayout.removeAllViews()
-        addWordLayout(word, holder.wordsLayout)
+                holder.firstVerbBlockLayout.setOnClickListener {
+                    if (verb.selectedBlock == BLOCK_MAIN) {
+                        verb.selectedBlock = BLOCK_NONE
+                    } else {
+                        verb.selectedBlock = BLOCK_MAIN
+                    }
+                    holder.showVerbDetails(verb)
+                    updateVerbBlockBackground(verb, holder.firstVerbBlockLayout, holder.secondVerbBlockLayout, holder.verbDetailsLayout)
+                }
+                holder.secondVerbBlockLayout.setOnClickListener {
+                    if (verb.selectedBlock == BLOCK_SECOND) {
+                        verb.selectedBlock = BLOCK_NONE
+                    } else {
+                        verb.selectedBlock = BLOCK_SECOND
+                    }
+                    holder.showVerbDetails(verb)
+                    updateVerbBlockBackground(verb, holder.firstVerbBlockLayout, holder.secondVerbBlockLayout, holder.verbDetailsLayout)
+                }
+
+                updateVerbBlockBackground(verb, holder.firstVerbBlockLayout, holder.secondVerbBlockLayout, holder.verbDetailsLayout)
+
+                holder.firstVerbBlockWordTextView.text = verb.mainWordStruct?.originalWord.toString()
+                holder.secondVerbBlockWordTextView.text = verb.secondaryWordStruct?.originalWord.toString()
+
+                val mainBlockWords = verb.mainWordStruct?.dictStruct?.words
+                var mainBlockWordsStr = ""
+                for (word in mainBlockWords!!) {
+                    mainBlockWordsStr += "$word\n"
+                    if (mainBlockWords.indexOf(word) > 3 ) {
+                        return
+                    }
+                }
+
+                val secondBlockWords = verb.secondaryWordStruct?.dictStruct?.words
+                var secondBlockWordsStr = ""
+                for (word in secondBlockWords!!) {
+                    secondBlockWordsStr += "$word\n"
+                    if (secondBlockWords.indexOf(word) > 3 ) {
+                        return
+                    }
+                }
+
+                holder.firstVerbBlockMeaningTextView.text = mainBlockWordsStr
+                holder.secondVerbBlockMeaningTextView.text = secondBlockWordsStr
+
+
+            }
+            TYPE_WORDS -> {
+                holder as WordsViewHolder
+                val word = words[position - compoundVerbs.size]
+                holder.wordsLayout.removeAllViews()
+                addWordLayout(word, holder.wordsLayout)
+            }
+        }
 
     }
 
     override fun getItemCount(): Int {
-        return words.size
+        return words.size + compoundVerbs.size
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (!compoundVerbs.isEmpty() && position <= compoundVerbs.size - 1) {
+            TYPE_COMPOUND_VERBS
+        } else {
+            TYPE_WORDS
+        }
     }
 
     interface LessonClickListener {
         fun onClick(lesson: Lesson)
     }
 
-    private fun setTextColorByWordType(textView: TextView, wordType: String) {
-        when (wordType) {
-            "NOUN"              -> { textView.setTextColor(0xffff8284.toInt()) }
-            "VERB"              -> { textView.setTextColor(0xff008000.toInt()) }
-            "SPECIAL"           -> { textView.setTextColor(0xff551a8b.toInt()) }
-            "CHINESE_NUMBER"    -> { return }
+    private fun getDrawable(id: Int): Drawable {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            context.resources.getDrawable(id, context.theme)
+        } else {
+            context.resources.getDrawable(id)
+        }
+    }
+
+    private fun setLayoutDrawable(layout: ConstraintLayout, drawable: Drawable) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
+            layout.setBackgroundDrawable(drawable)
+        } else {
+            layout.background = drawable
+        }
+    }
+
+    private fun updateVerbBlockBackground(verb: CompoundVerb, firstBlock: ConstraintLayout, secondBlock: ConstraintLayout, detailsLayout: ConstraintLayout) {
+        when {
+            verb.selectedBlock == BLOCK_MAIN -> {
+                setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_selected))
+                setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
+                AnimationUtil.expand(detailsLayout)
+            }
+            verb.selectedBlock == BLOCK_SECOND -> {
+                setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
+                setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_selected))
+                AnimationUtil.expand(detailsLayout)
+            }
+            else -> {
+                detailsLayout.requestLayout()
+                setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
+                setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
+                AnimationUtil.collapse(detailsLayout)
+            }
         }
     }
 
@@ -108,7 +235,6 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
                 context.runOnUiThread { wordItem.verboseLayout.visibility = View.GONE }
             }
 
-
             if (translatedWord.lessons != null) {
                 context.runOnUiThread { wordItem.wordLessonsTextView.visibility = View.VISIBLE }
                 context.runOnUiThread { wordItem.lessonsLayout.visibility = View.VISIBLE }
@@ -131,8 +257,68 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
         }
     }
 
-    class ViewHolder (view: View) : RecyclerView.ViewHolder(view) {
-        val wordsLayout: LinearLayout= view.wordsLayout
+    class WordsViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+        val wordsLayout: LinearLayout = view.wordsLayout
+
+    }
+
+    class CompoundVerbsViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+        val firstVerbBlockLayout: ConstraintLayout = view.firstVerbBlockLayout
+        val secondVerbBlockLayout: ConstraintLayout = view.secondVerbBlockLayout
+        val firstVerbBlockWordTextView: TextView = view.firstVerbBlockWordTextView
+        val secondVerbBlockWordTextView: TextView = view.secondVerbBlockWordTextView
+        val firstVerbBlockMeaningTextView: TextView = view.firstVerbBlockMeaningTextView
+        val secondVerbBlockMeaningTextView: TextView = view.secondVerbBlockMeaningTextView
+        val verbDetailsLayout: ConstraintLayout = view.verbDetailsLayout
+        val verbDetailsFirstWordTextView: TextView = view.verbDetailsFirstWordTextView
+        val verbDetailsSecondWordTextView: TextView = view.verbDetailsSecondWordTextView
+        val verbDetailsWordMeaningTextView: TextView = view.verbDetailsWordMeaningTextView
+        val verbDetailsWordMeaningsLayout: LinearLayout = view.verbDetailsWordMeaningsLayout
+        val verbDetailsVerboseLayout: LinearLayout = view.verbDetailsVerboseLayout
+
+        @SuppressLint("InflateParams")
+        fun showVerbDetails(verb: CompoundVerb) {
+            val translatedWord = if (verb.selectedBlock == BLOCK_MAIN) {
+                verb.mainWordStruct
+            } else {
+                verb.secondaryWordStruct
+            }
+
+            verbDetailsFirstWordTextView.text = translatedWord?.dictStruct?.base.toString()
+            verbDetailsSecondWordTextView.text = translatedWord?.originalWord.toString()
+            setTextColorByWordType(verbDetailsFirstWordTextView, translatedWord?.wordType.toString())
+
+            verbDetailsWordMeaningsLayout.removeAllViews()
+            verbDetailsVerboseLayout.removeAllViews()
+
+            if (translatedWord?.dictStruct?.words != null) {
+                (mContext as MainActivity).runOnUiThread { verbDetailsWordMeaningTextView.visibility = View.VISIBLE }
+                (mContext as MainActivity).runOnUiThread { verbDetailsWordMeaningsLayout.visibility = View.VISIBLE }
+                for (wordMeaning in translatedWord.dictStruct?.words!!) {
+                    val wordMeaningItem = LayoutInflater.from(mContext).inflate(R.layout.item_dictionary_word_meaning, null)
+                    wordMeaningItem.meaningTextView.text = wordMeaning
+                    verbDetailsWordMeaningsLayout.addView(wordMeaningItem)
+                }
+            } else {
+                (mContext as MainActivity).runOnUiThread { verbDetailsWordMeaningTextView.visibility = View.GONE }
+                (mContext as MainActivity).runOnUiThread { verbDetailsWordMeaningsLayout.visibility = View.GONE }
+            }
+
+            val verboseList = translatedWord?.verbose.toString().split("\n")
+            if (!verboseList.isEmpty()) {
+                (mContext as MainActivity).runOnUiThread { verbDetailsVerboseLayout.visibility = View.VISIBLE }
+                for (verbose in verboseList) {
+                    if (!verbose.isEmpty()) {
+                        val wordVerboseItem = LayoutInflater.from(mContext).inflate(R.layout.item_dictionary_word_verbose, null)
+                        wordVerboseItem.wordVerboseTextView.text = verbose
+                        verbDetailsVerboseLayout.addView(wordVerboseItem)
+                    }
+                }
+            } else {
+                (mContext as MainActivity).runOnUiThread { verbDetailsVerboseLayout.verboseLayout.visibility = View.GONE }
+            }
+
+        }
 
     }
 

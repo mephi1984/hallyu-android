@@ -4,4 +4,6 @@ class DictionaryResponse {
 
     var resultTable: List<Word>? = null
 
+    var complexVerbResultArr: List<CompoundVerb>? = null
+
 }

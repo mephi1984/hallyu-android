@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.models.dictionary.CompoundVerb
 import com.fishrungames.hallyu.models.dictionary.DictionaryResponse
 import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.dictionary.Word
@@ -28,6 +29,7 @@ class DictionaryFragment : BaseFragment() {
 
     private var dictionaryAdapter: DictionaryAdapter? = null
     private var words: MutableList<Word> = mutableListOf()
+    private var compoundVerbs: MutableList<CompoundVerb> = mutableListOf()
     private var hallyuApi: HallyuApi? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -53,7 +55,7 @@ class DictionaryFragment : BaseFragment() {
 
     private fun initDictionaryRecyclerView() {
         val layoutManager = LinearLayoutManager(context!!)
-        dictionaryAdapter = DictionaryAdapter(words, context!!, object : DictionaryAdapter.LessonClickListener {
+        dictionaryAdapter = DictionaryAdapter(compoundVerbs, words, context!!, object : DictionaryAdapter.LessonClickListener {
             override fun onClick(lesson: Lesson) {
                 getActivityInstance()?.openLessonFragment(lesson)
             }
@@ -91,6 +93,7 @@ class DictionaryFragment : BaseFragment() {
         hideDictionaryRecycler()
         getActivityInstance()?.hideInputMethod()
         words.clear()
+        compoundVerbs.clear()
         dictionaryAdapter?.notifyDataSetChanged()
         val translateTextRequest = TranslateTextRequest()
         translateTextRequest.RequestWordTranslation = textInKoreanEditText.text.toString()
@@ -110,12 +113,20 @@ class DictionaryFragment : BaseFragment() {
             getActivityInstance()?.hideProgressBar()
             val dictionaryResponse = response?.body()
             val resultTable = dictionaryResponse?.resultTable
+            val complexVerbResultArr = dictionaryResponse?.complexVerbResultArr
 
             if (resultTable != null) {
                 words.addAll(dictionaryResponse.resultTable!!)
-                dictionaryAdapter?.notifyDataSetChanged()
-                showDictionaryRecycler()
+                words.addAll(dictionaryResponse.resultTable!!)
+                words.addAll(dictionaryResponse.resultTable!!)
             }
+
+            if (complexVerbResultArr != null) {
+                compoundVerbs.addAll(dictionaryResponse.complexVerbResultArr!!)
+            }
+
+            dictionaryAdapter?.notifyDataSetChanged()
+            showDictionaryRecycler()
 
         }
 
