@@ -26,6 +26,7 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import android.content.Intent
+import com.fishrungames.hallyu.models.dictionary.Lesson
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_COMICS_EPISODES = "fragmentComicsEpisodes"
     private val FRAGMENT_EPISODE_PICTURES = "fragmentEpisodePictures"
     private val FRAGMENT_POST_DETAILS = "fragmentPostDetails"
+    private val FRAGMENT_LESSON = "fragmentLesson"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
 
@@ -253,6 +255,17 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, postDetailsFragment, FRAGMENT_POST_DETAILS).addToBackStack(FRAGMENT_POST_DETAILS)
+        ft.commit()
+    }
+
+    fun openLessonFragment(lesson: Lesson) {
+        val lessonFragment = LessonFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("lesson", lesson)
+        lessonFragment.arguments = bundle
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, lessonFragment, FRAGMENT_LESSON).addToBackStack(FRAGMENT_LESSON)
         ft.commit()
     }
 

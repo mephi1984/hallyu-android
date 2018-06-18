@@ -3,11 +3,13 @@ package com.fishrungames.hallyu.ui.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.dictionary.Word
 import com.fishrungames.hallyu.ui.MainActivity
 import kotlinx.android.synthetic.main.item_dictionary.view.*
@@ -16,17 +18,19 @@ import kotlinx.android.synthetic.main.item_dictionary_word_lesson.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_meaning.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_verbose.view.*
 
-class DictionaryAdapter(private val words : List<Word>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<DictionaryAdapter.ViewHolder>() {
+class DictionaryAdapter(private val words : List<Word>, val context: Context, private val clickListener: LessonClickListener) : RecyclerView.Adapter<DictionaryAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_dictionary, parent, false))
     }
 
     companion object {
-        var mClickListener: ClickListener? = null
+        var mClickListener: LessonClickListener? = null
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+
+        mClickListener = clickListener
 
         val word = words[position]
 
@@ -39,8 +43,8 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
         return words.size
     }
 
-    interface ClickListener {
-        fun onClick(position: Int)
+    interface LessonClickListener {
+        fun onClick(lesson: Lesson)
     }
 
     @SuppressLint("InflateParams")
@@ -100,6 +104,12 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
                     val wordLessonItem = LayoutInflater.from(context).inflate(R.layout.item_dictionary_word_lesson, null)
                     wordLessonItem.wordLessonTextView.text = lesson.title.toString()
                     wordItem.lessonsLayout.addView(wordLessonItem)
+
+                    wordLessonItem.setOnClickListener {
+                        if (mClickListener != null)
+                            mClickListener?.onClick(lesson)
+                    }
+
                 }
             } else {
                 context.runOnUiThread { wordItem.wordLessonsTextView.visibility = View.GONE }

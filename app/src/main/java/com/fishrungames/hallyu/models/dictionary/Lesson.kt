@@ -1,6 +1,8 @@
 package com.fishrungames.hallyu.models.dictionary
 
-class Lesson {
+import java.io.Serializable
+
+class Lesson : Serializable {
 
     var id: Int? = null
 

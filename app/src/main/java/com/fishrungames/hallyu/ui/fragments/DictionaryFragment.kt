@@ -11,6 +11,7 @@ import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.dictionary.DictionaryResponse
+import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.dictionary.Word
 import com.fishrungames.hallyu.models.requests.TranslateTextRequest
 import com.fishrungames.hallyu.models.responses.TranslateTextResponse
@@ -52,9 +53,9 @@ class DictionaryFragment : BaseFragment() {
 
     private fun initDictionaryRecyclerView() {
         val layoutManager = LinearLayoutManager(context!!)
-        dictionaryAdapter = DictionaryAdapter(words, context!!, object : DictionaryAdapter.ClickListener {
-            override fun onClick(position: Int) {
-
+        dictionaryAdapter = DictionaryAdapter(words, context!!, object : DictionaryAdapter.LessonClickListener {
+            override fun onClick(lesson: Lesson) {
+                getActivityInstance()?.openLessonFragment(lesson)
             }
         })
         dictionaryRecyclerView.layoutManager = layoutManager
