@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.dictionary.Lesson
 import kotlinx.android.synthetic.main.fragment_lesson.*
+import android.webkit.WebViewClient
+
+
 
 class LessonFragment : BaseFragment() {
 
@@ -23,7 +27,15 @@ class LessonFragment : BaseFragment() {
 
         getDataFromArguments()
 
+        lessonWebView.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView, url: String) {
+                getActivityInstance()?.hideProgressBar()
+            }
+        }
+
         lessonWebView.settings.javaScriptEnabled = true
+
+        getActivityInstance()?.showProgressBar()
         lessonWebView.loadUrl(lesson?.path)
 
     }

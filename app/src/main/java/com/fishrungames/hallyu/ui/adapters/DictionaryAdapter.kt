@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.dictionary.Word
@@ -25,12 +26,12 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
     }
 
     companion object {
-        var mClickListener: LessonClickListener? = null
+        var lessonClickListener: LessonClickListener? = null
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        mClickListener = clickListener
+        lessonClickListener = clickListener
 
         val word = words[position]
 
@@ -45,6 +46,15 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
 
     interface LessonClickListener {
         fun onClick(lesson: Lesson)
+    }
+
+    private fun setTextColorByWordType(textView: TextView, wordType: String) {
+        when (wordType) {
+            "NOUN"              -> { textView.setTextColor(0xffff8284.toInt()) }
+            "VERB"              -> { textView.setTextColor(0xff008000.toInt()) }
+            "SPECIAL"           -> { textView.setTextColor(0xff551a8b.toInt()) }
+            "CHINESE_NUMBER"    -> { return }
+        }
     }
 
     @SuppressLint("InflateParams")
@@ -68,6 +78,8 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
 
             wordItem.firstWordTextView.text = translatedWord.originalWord.toString()
             wordItem.secondWordTextView.text = translatedWord.dictStruct?.base.toString()
+
+            setTextColorByWordType(wordItem.firstWordTextView, translatedWord.wordType.toString())
 
             if (translatedWord.dictStruct?.words != null) {
                 context.runOnUiThread { wordItem.wordMeaningTextView.visibility = View.VISIBLE }
@@ -103,13 +115,11 @@ class DictionaryAdapter(private val words : List<Word>, val context: Context, pr
                 for (lesson in translatedWord.lessons!!) {
                     val wordLessonItem = LayoutInflater.from(context).inflate(R.layout.item_dictionary_word_lesson, null)
                     wordLessonItem.wordLessonTextView.text = lesson.title.toString()
-                    wordItem.lessonsLayout.addView(wordLessonItem)
-
                     wordLessonItem.setOnClickListener {
-                        if (mClickListener != null)
-                            mClickListener?.onClick(lesson)
+                        if (lessonClickListener != null)
+                            lessonClickListener?.onClick(lesson)
                     }
-
+                    wordItem.lessonsLayout.addView(wordLessonItem)
                 }
             } else {
                 context.runOnUiThread { wordItem.wordLessonsTextView.visibility = View.GONE }
