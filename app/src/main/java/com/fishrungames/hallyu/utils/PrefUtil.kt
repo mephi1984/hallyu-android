@@ -6,13 +6,32 @@ import android.preference.PreferenceManager
 
 object PrefUtil {
 
-    private val APP_PREFERENCES_POST_CATEGORIES: String = "postCategories"
+    private val APP_PREFERENCES_USER_FIRST_NAME: String = "userFirstName"
+    private val APP_PREFERENCES_USER_LAST_NAME: String = "userLastName"
+    private val APP_PREFERENCES_USER_TOKEN: String = "userToken"
 
-    fun getPostCategories(context: Context): ArrayList<String> {
-        return getStringArrayFromPrefs(context, APP_PREFERENCES_POST_CATEGORIES, "")
+    fun getUserFirstName(context: Context): String {
+        return getStringFromPrefs(context, APP_PREFERENCES_USER_FIRST_NAME, "")
     }
-    fun savePostCategories(context: Context, categories: ArrayList<String>) {
-        saveStringArrayToPrefs(context, APP_PREFERENCES_POST_CATEGORIES, categories)
+
+    fun setUserFirstName(context: Context, firstName: String) {
+        saveStringToPrefs(context, APP_PREFERENCES_USER_FIRST_NAME, firstName)
+    }
+
+    fun getUserLastName(context: Context): String {
+        return getStringFromPrefs(context, APP_PREFERENCES_USER_LAST_NAME, "")
+    }
+
+    fun setUserLastName(context: Context, lastName: String) {
+        saveStringToPrefs(context, APP_PREFERENCES_USER_LAST_NAME, lastName)
+    }
+
+    fun getUserToken(context: Context): String {
+        return getStringFromPrefs(context, APP_PREFERENCES_USER_TOKEN, "")
+    }
+
+    fun setUserToken(context: Context, token: String) {
+        saveStringToPrefs(context, APP_PREFERENCES_USER_TOKEN, token)
     }
 
     @SuppressLint("ApplySharedPref")

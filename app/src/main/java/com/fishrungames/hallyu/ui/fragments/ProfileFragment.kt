@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.fishrungames.hallyu.R
-import com.vk.sdk.VKSdk
 
 class ProfileFragment : BaseFragment() {
 
@@ -15,9 +14,6 @@ class ProfileFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        VKSdk.login(getActivityInstance()!!)
-
     }
 
     override fun onResume() {

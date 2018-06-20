@@ -18,6 +18,7 @@
     <string name="barTitle.cardTest">Словарный тест</string>
     <string name="barTitle.comics">Комиксы с переводом</string>
     <string name="barTitle.comicsEpisodes">Эпизоды</string>
+    <string name="barTitle.login">Авторизация</string>
 
     <string name="text.dictionaryFragment.enterWord">Введите слово или фразу на Корейском языке. Сервис подберет перевод</string>
     <string name="text.dictionaryFragment.translate">Перевести</string>
@@ -49,6 +50,7 @@
     <string name="text.episodePicturesFragment.back">Назад</string>
     <string name="text.episodePicturesFragment.next">Далее</string>
     <string name="text.postDetailsFragment.noComments">Комментариев к данному посту нет</string>
+    <string name="text.loginFragment.vkLogin">Войти через Вконтакте</string>
     
     <string name="hint.numeralTestFragment.answer">Ответ</string>
     

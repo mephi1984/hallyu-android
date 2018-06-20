@@ -2,10 +2,13 @@ package com.fishrungames.hallyu.utils.retrofit
 
 import com.fishrungames.hallyu.models.responses.*
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface NewHallyuApi {
+
+    @POST("/user/login")
+    @FormUrlEncoded
+    fun vkLogin(@Field ("accessToken") accessToken: String): Call<VKAuthorizationResponse>
 
     @GET("/comics/getList")
     fun getComics(): Call<ComicsResponse>

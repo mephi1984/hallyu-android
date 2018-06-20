@@ -26,7 +26,17 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import android.content.Intent
+import com.fishrungames.hallyu.models.User
 import com.fishrungames.hallyu.models.dictionary.Lesson
+import com.fishrungames.hallyu.models.responses.VKAuthorizationResponse
+import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.PrefUtil
+import com.fishrungames.hallyu.utils.retrofit.HallyuApi
+import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
+import com.fishrungames.hallyu.utils.retrofit.RetrofitController
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,8 +51,11 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_EPISODE_PICTURES = "fragmentEpisodePictures"
     private val FRAGMENT_POST_DETAILS = "fragmentPostDetails"
     private val FRAGMENT_LESSON = "fragmentLesson"
+    private val FRAGMENT_LOGIN = "fragmentLogin"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
+    private var hallyuApi: HallyuApi? = null
+    private var newHallyuApi: NewHallyuApi? = null
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
@@ -59,8 +72,12 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_profile -> {
-                replaceToProfileFragment()
-                return@OnNavigationItemSelectedListener true
+                if (PrefUtil.getUserToken(this) != "") {
+                    replaceToProfileFragment()
+                    return@OnNavigationItemSelectedListener true
+                } else {
+                    openLoginFragment()
+                }
             }
         }
         false
@@ -70,6 +87,9 @@ class MainActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        hallyuApi = RetrofitController.getHallyuApi()
+        newHallyuApi = RetrofitController.getNewHallyuApi()
 
         initImageLoader()
 
@@ -116,12 +136,24 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
                     override fun onResult(res: VKAccessToken) {
+                        vkAuthorization(res)
                         Log.d("VKLog", VKAccessToken.currentToken().userId)
-                        Log.d("VKLog", VKAccessToken.currentToken().accessToken)
+                        Log.d("VKLog", "TOKEN: " + VKAccessToken.currentToken().accessToken)
                     }
                     override fun onError(error: VKError) {}
                 })) {
         }
+    }
+
+    private fun vkAuthorization(vkAccessToken: VKAccessToken) {
+        showProgressBar()
+        newHallyuApi!!.vkLogin(vkAccessToken.accessToken).enqueue(vkLoginCallback)
+    }
+
+    private fun saveUserData (user: User) {
+        PrefUtil.setUserFirstName(this, user.firstName!!)
+        PrefUtil.setUserLastName(this, user.lastName!!)
+        PrefUtil.setUserToken(this, user.token!!)
     }
 
     @SuppressLint("RestrictedApi")
@@ -269,6 +301,14 @@ class MainActivity : AppCompatActivity() {
         ft.commit()
     }
 
+    fun openLoginFragment() {
+        val loginFragment = LoginFragment()
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, loginFragment, FRAGMENT_LOGIN).addToBackStack(FRAGMENT_LOGIN)
+        ft.commit()
+    }
+
     fun setBottomNavigationViewState(currentFragmentTag: String?) {
         if (currentFragmentTag != null && bottomNavigationFragments.contains(currentFragmentTag)) {
             updateBottomNavigationViewState(true)
@@ -300,6 +340,31 @@ class MainActivity : AppCompatActivity() {
 
     fun hideProgressBar() {
         this.runOnUiThread { progressBar.visibility = View.GONE }
+    }
+
+    private val vkLoginCallback = object : Callback<VKAuthorizationResponse> {
+        override fun onResponse(call: Call<VKAuthorizationResponse>?, response: Response<VKAuthorizationResponse>?) {
+            hideProgressBar()
+            val vkAuthorizationResponse = response?.body()
+            if (vkAuthorizationResponse?.haveMessage()!!) {
+                DialogUtil.showAlertDialog(this@MainActivity, vkAuthorizationResponse.message!!)
+                return
+            } else {
+                if (vkAuthorizationResponse.user != null) {
+                    saveUserData(vkAuthorizationResponse.user!!)
+                    navigation.selectedItemId = R.id.navigation_profile
+                    replaceToProfileFragment()
+                } else {
+                    DialogUtil.showAlertDialog(this@MainActivity, getString(R.string.error_message_serverError))
+                }
+            }
+        }
+
+        override fun onFailure(call: Call<VKAuthorizationResponse>?, t: Throwable?) {
+            hideProgressBar()
+            DialogUtil.showAlertDialog(this@MainActivity, getString(R.string.error_message_networkError))
+        }
+
     }
 
 }
