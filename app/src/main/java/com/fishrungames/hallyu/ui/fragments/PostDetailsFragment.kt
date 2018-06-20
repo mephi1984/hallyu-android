@@ -50,9 +50,7 @@ class PostDetailsFragment : BaseFragment() {
         commentsRecyclerView.adapter = postCommentAdapter
         commentsRecyclerView.setHasFixedSize(true)
 
-        commentsRecyclerView.addOnScrollListener(ScrollListener(fab))
 
-        fab.setOnClickListener { getActivityInstance()?.openSendCommentFragment(post!!) }
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
 
@@ -64,7 +62,10 @@ class PostDetailsFragment : BaseFragment() {
             getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.VISIBLE }
         }
 
-        if (PrefUtil.getUserToken(context!!) == "") {
+        if (PrefUtil.getUserToken(context!!) != "") {
+            commentsRecyclerView.addOnScrollListener(ScrollListener(fab))
+            fab.setOnClickListener { getActivityInstance()?.openSendCommentFragment(post!!) }
+        } else {
             getActivityInstance()?.runOnUiThread { fab.visibility = View.INVISIBLE }
         }
 
@@ -81,6 +82,7 @@ class PostDetailsFragment : BaseFragment() {
 
         if (getActivityInstance()?.newPostComment!!) {
             getActivityInstance()?.newPostComment = false
+            getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.INVISIBLE }
             comments.clear()
             postCommentAdapter?.notifyDataSetChanged()
             getActivityInstance()?.showProgressBar()

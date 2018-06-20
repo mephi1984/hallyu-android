@@ -41,6 +41,7 @@ class SendCommentFragment: BaseFragment() {
             return
         }
         getActivityInstance()?.hideInputMethod()
+        getActivityInstance()?.showProgressBar()
         newHallyuApi!!.sendComment(PrefUtil.getUserToken(context!!), post?.id.toString(), sendCommentTextView.text.toString()).enqueue(sendCommentCallback)
     }
 
@@ -55,9 +56,9 @@ class SendCommentFragment: BaseFragment() {
             if (activity == null) {
                 return
             }
+            getActivityInstance()?.newPostComment = true
             getActivityInstance()?.hideProgressBar()
             if (response!!.isSuccessful) {
-                getActivityInstance()?.newPostComment = true
                 getActivityInstance()?.onBackPressed()
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))

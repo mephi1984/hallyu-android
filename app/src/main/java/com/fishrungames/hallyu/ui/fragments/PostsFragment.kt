@@ -46,9 +46,6 @@ class PostsFragment : BaseFragment() {
         initPostCategoryRecyclerView()
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
-        getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
-        newHallyuApi!!.getPosts("1").enqueue(getPostsCallback)
 
     }
 
@@ -72,6 +69,13 @@ class PostsFragment : BaseFragment() {
             hidePostCategories()
             getActivityInstance()?.supportActionBar?.title = barTitle
         }
+
+        posts.clear()
+        postCategoryAdapter?.notifyDataSetChanged()
+        getActivityInstance()?.showProgressBar()
+        newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
+        newHallyuApi!!.getPosts("1").enqueue(getPostsCallback)
+
     }
 
     private fun initPostRecyclerView() {
