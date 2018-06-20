@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.fishrungames.hallyu.R
+import com.fishrungames.hallyu.listeners.ScrollListener
 import com.fishrungames.hallyu.models.Post
 import com.fishrungames.hallyu.models.PostComment
 import com.fishrungames.hallyu.models.responses.PostCommentsResponse
 import com.fishrungames.hallyu.ui.adapters.PostCommentAdapter
 import com.fishrungames.hallyu.utils.DialogUtil
+import com.fishrungames.hallyu.utils.PrefUtil
 import com.fishrungames.hallyu.utils.retrofit.NewHallyuApi
 import com.fishrungames.hallyu.utils.retrofit.RetrofitController
 import kotlinx.android.synthetic.main.fragment_post_details.*
@@ -48,6 +50,10 @@ class PostDetailsFragment : BaseFragment() {
         commentsRecyclerView.adapter = postCommentAdapter
         commentsRecyclerView.setHasFixedSize(true)
 
+        commentsRecyclerView.addOnScrollListener(ScrollListener(fab))
+
+        fab.setOnClickListener { getActivityInstance()?.openSendCommentFragment(post!!) }
+
         newHallyuApi = RetrofitController.getNewHallyuApi()
 
         if (post?.commentsCount!! > 0) {
@@ -58,6 +64,9 @@ class PostDetailsFragment : BaseFragment() {
             getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.VISIBLE }
         }
 
+        if (PrefUtil.getUserToken(context!!) == "") {
+            getActivityInstance()?.runOnUiThread { fab.visibility = View.INVISIBLE }
+        }
 
     }
 
@@ -69,6 +78,14 @@ class PostDetailsFragment : BaseFragment() {
     override fun onResume() {
         super.onResume()
         setupActionBar()
+
+        if (post?.newComment!!) {
+            post?.newComment = false
+            comments.clear()
+            postCommentAdapter?.notifyDataSetChanged()
+            getActivityInstance()?.showProgressBar()
+            newHallyuApi!!.getComments(post?.id.toString()).enqueue(getCommentsCallback)
+        }
     }
 
     private fun getDataFromArguments() {

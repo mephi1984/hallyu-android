@@ -51,6 +51,8 @@
     <string name="text.episodePicturesFragment.next">Далее</string>
     <string name="text.postDetailsFragment.noComments">Комментариев к данному посту нет</string>
     <string name="text.loginFragment.vkLogin">Войти через Вконтакте</string>
+    <string name="text.sendCommentFragment.writeComment">Комментарий</string>
+    <string name="text.sendCommentFragment.send">Отправить</string>
     
     <string name="hint.numeralTestFragment.answer">Ответ</string>
     

@@ -22,4 +22,6 @@ class Post : Serializable {
 
     var images: List<Image>? = null
 
+    var newComment: Boolean = false
+
 }
