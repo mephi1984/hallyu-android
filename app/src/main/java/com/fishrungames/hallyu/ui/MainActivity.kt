@@ -137,8 +137,6 @@ class MainActivity : AppCompatActivity() {
         if (!VKSdk.onActivityResult(requestCode, resultCode, data, object : VKCallback<VKAccessToken> {
                     override fun onResult(res: VKAccessToken) {
                         vkAuthorization(res)
-                        Log.d("VKLog", VKAccessToken.currentToken().userId)
-                        Log.d("VKLog", "TOKEN: " + VKAccessToken.currentToken().accessToken)
                     }
                     override fun onError(error: VKError) {}
                 })) {
@@ -153,6 +151,8 @@ class MainActivity : AppCompatActivity() {
     private fun saveUserData (user: User) {
         PrefUtil.setUserFirstName(this, user.firstName!!)
         PrefUtil.setUserLastName(this, user.lastName!!)
+        PrefUtil.setUserPhotoUrl(this, user.photoUrl!!)
+        PrefUtil.setUserPhotoName(this, user.photoName!!)
         PrefUtil.setUserToken(this, user.token!!)
     }
 

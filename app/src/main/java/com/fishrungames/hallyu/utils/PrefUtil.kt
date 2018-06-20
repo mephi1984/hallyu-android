@@ -8,6 +8,8 @@ object PrefUtil {
 
     private val APP_PREFERENCES_USER_FIRST_NAME: String = "userFirstName"
     private val APP_PREFERENCES_USER_LAST_NAME: String = "userLastName"
+    private val APP_PREFERENCES_USER_PHOTO_URL: String = "userPhotoUrl"
+    private val APP_PREFERENCES_USER_PHOTO_NAME: String = "userPhotoName"
     private val APP_PREFERENCES_USER_TOKEN: String = "userToken"
 
     fun getUserFirstName(context: Context): String {
@@ -32,6 +34,22 @@ object PrefUtil {
 
     fun setUserToken(context: Context, token: String) {
         saveStringToPrefs(context, APP_PREFERENCES_USER_TOKEN, token)
+    }
+
+    fun getUserPhotoUrl(context: Context): String {
+        return getStringFromPrefs(context, APP_PREFERENCES_USER_PHOTO_URL, "")
+    }
+
+    fun setUserPhotoUrl(context: Context, photoUrl: String) {
+        saveStringToPrefs(context, APP_PREFERENCES_USER_PHOTO_URL, photoUrl)
+    }
+
+    fun getUserPhotoName(context: Context): String {
+        return getStringFromPrefs(context, APP_PREFERENCES_USER_PHOTO_NAME, "")
+    }
+
+    fun setUserPhotoName(context: Context, photoName: String) {
+        saveStringToPrefs(context, APP_PREFERENCES_USER_PHOTO_NAME, photoName)
     }
 
     @SuppressLint("ApplySharedPref")
