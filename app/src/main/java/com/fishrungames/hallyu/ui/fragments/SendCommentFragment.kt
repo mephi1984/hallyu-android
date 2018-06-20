@@ -57,7 +57,7 @@ class SendCommentFragment: BaseFragment() {
             }
             getActivityInstance()?.hideProgressBar()
             if (response!!.isSuccessful) {
-                post?.newComment = true
+                getActivityInstance()?.newPostComment = true
                 getActivityInstance()?.onBackPressed()
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))

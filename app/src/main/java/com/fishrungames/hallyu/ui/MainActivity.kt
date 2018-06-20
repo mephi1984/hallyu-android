@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
     private var hallyuApi: HallyuApi? = null
     private var newHallyuApi: NewHallyuApi? = null
 
+    var newPostComment: Boolean = false
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_posts -> {

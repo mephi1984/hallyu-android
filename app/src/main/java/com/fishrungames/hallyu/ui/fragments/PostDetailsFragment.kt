@@ -79,8 +79,8 @@ class PostDetailsFragment : BaseFragment() {
         super.onResume()
         setupActionBar()
 
-        if (post?.newComment!!) {
-            post?.newComment = false
+        if (getActivityInstance()?.newPostComment!!) {
+            getActivityInstance()?.newPostComment = false
             comments.clear()
             postCommentAdapter?.notifyDataSetChanged()
             getActivityInstance()?.showProgressBar()
