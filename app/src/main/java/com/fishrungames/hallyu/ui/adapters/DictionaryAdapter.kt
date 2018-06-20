@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.item_dictionary_word.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_lesson.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_meaning.view.*
 import kotlinx.android.synthetic.main.item_dictionary_word_verbose.view.*
-
+import android.view.View.MeasureSpec
 
 class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
                         private val words : List<Word>,
@@ -69,6 +69,8 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
         lessonClickListener = clickListener
         val viewType = holder.itemViewType
 
+        (context as MainActivity)
+
         when (viewType) {
             TYPE_COMPOUND_VERBS -> {
                 holder as CompoundVerbsViewHolder
@@ -79,17 +81,18 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
                         verb.selectedBlock = BLOCK_NONE
                     } else {
                         verb.selectedBlock = BLOCK_MAIN
+                        holder.showVerbDetails(verb)
                     }
-                    holder.showVerbDetails(verb)
                     updateVerbBlockBackground(verb, holder.firstVerbBlockLayout, holder.secondVerbBlockLayout, holder.verbDetailsLayout)
                 }
+
                 holder.secondVerbBlockLayout.setOnClickListener {
                     if (verb.selectedBlock == BLOCK_SECOND) {
                         verb.selectedBlock = BLOCK_NONE
                     } else {
                         verb.selectedBlock = BLOCK_SECOND
+                        holder.showVerbDetails(verb)
                     }
-                    holder.showVerbDetails(verb)
                     updateVerbBlockBackground(verb, holder.firstVerbBlockLayout, holder.secondVerbBlockLayout, holder.verbDetailsLayout)
                 }
 
@@ -119,6 +122,36 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
                 holder.firstVerbBlockMeaningTextView.text = mainBlockWordsStr
                 holder.secondVerbBlockMeaningTextView.text = secondBlockWordsStr
 
+                val verboseList = verb.verbose.toString().split("\n")
+                if (!verboseList.isEmpty()) {
+                    context.runOnUiThread { holder.compoundVerbVerboseLayout.visibility = View.VISIBLE }
+                    for (verbose in verboseList) {
+                        if (!verbose.isEmpty()) {
+                            val wordVerboseItem = LayoutInflater.from(context).inflate(R.layout.item_dictionary_word_verbose, null)
+                            wordVerboseItem.wordVerboseTextView.text = verbose
+                            holder.compoundVerbVerboseLayout.addView(wordVerboseItem)
+                        }
+                    }
+                } else {
+                    context.runOnUiThread { holder.compoundVerbVerboseLayout.visibility = View.GONE }
+                }
+
+                if (verb.lessons != null) {
+                    context.runOnUiThread { holder.compoundVerbWordLessonsTextView.visibility = View.VISIBLE }
+                    context.runOnUiThread { holder.compoundVerbLessonsLayout.visibility = View.VISIBLE }
+                    for (lesson in verb.lessons!!) {
+                        val wordLessonItem = LayoutInflater.from(context).inflate(R.layout.item_dictionary_word_lesson, null)
+                        wordLessonItem.wordLessonTextView.text = lesson.title.toString()
+                        wordLessonItem.setOnClickListener {
+                            if (lessonClickListener != null)
+                                lessonClickListener?.onClick(lesson)
+                        }
+                        holder.compoundVerbLessonsLayout.addView(wordLessonItem)
+                    }
+                } else {
+                    context.runOnUiThread { holder.compoundVerbWordLessonsTextView.visibility = View.GONE }
+                    context.runOnUiThread { holder.compoundVerbLessonsLayout.visibility = View.GONE }
+                }
 
             }
             TYPE_WORDS -> {
@@ -168,18 +201,15 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
             verb.selectedBlock == BLOCK_MAIN -> {
                 setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_selected))
                 setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
-                AnimationUtil.expand(detailsLayout)
             }
             verb.selectedBlock == BLOCK_SECOND -> {
                 setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
                 setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_selected))
-                AnimationUtil.expand(detailsLayout)
             }
             else -> {
-                detailsLayout.requestLayout()
                 setLayoutDrawable(firstBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
                 setLayoutDrawable(secondBlock, getDrawable(R.drawable.shape_dictionary_verb_block_default))
-                AnimationUtil.collapse(detailsLayout)
+                AnimationUtil.collapseView(detailsLayout)
             }
         }
     }
@@ -263,6 +293,7 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
     }
 
     class CompoundVerbsViewHolder (view: View) : RecyclerView.ViewHolder(view) {
+        var contentLayout: ConstraintLayout = view.contentLayout
         val firstVerbBlockLayout: ConstraintLayout = view.firstVerbBlockLayout
         val secondVerbBlockLayout: ConstraintLayout = view.secondVerbBlockLayout
         val firstVerbBlockWordTextView: TextView = view.firstVerbBlockWordTextView
@@ -270,11 +301,15 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
         val firstVerbBlockMeaningTextView: TextView = view.firstVerbBlockMeaningTextView
         val secondVerbBlockMeaningTextView: TextView = view.secondVerbBlockMeaningTextView
         val verbDetailsLayout: ConstraintLayout = view.verbDetailsLayout
+        val verbDetailsContentLayout: ConstraintLayout = view.verbDetailsContentLayout
         val verbDetailsFirstWordTextView: TextView = view.verbDetailsFirstWordTextView
         val verbDetailsSecondWordTextView: TextView = view.verbDetailsSecondWordTextView
         val verbDetailsWordMeaningTextView: TextView = view.verbDetailsWordMeaningTextView
         val verbDetailsWordMeaningsLayout: LinearLayout = view.verbDetailsWordMeaningsLayout
         val verbDetailsVerboseLayout: LinearLayout = view.verbDetailsVerboseLayout
+        val compoundVerbVerboseLayout: LinearLayout = view.compoundVerbVerboseLayout
+        val compoundVerbWordLessonsTextView: TextView = view.compoundVerbWordLessonsTextView
+        val compoundVerbLessonsLayout: LinearLayout = view.compoundVerbLessonsLayout
 
         @SuppressLint("InflateParams")
         fun showVerbDetails(verb: CompoundVerb) {
@@ -318,7 +353,19 @@ class DictionaryAdapter(private val compoundVerbs: List<CompoundVerb>,
                 (mContext as MainActivity).runOnUiThread { verbDetailsVerboseLayout.verboseLayout.visibility = View.GONE }
             }
 
+            val widthSpec = MeasureSpec.makeMeasureSpec(contentLayout.width, MeasureSpec.EXACTLY)
+            val heightSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
+            verbDetailsLayout.measure(widthSpec, heightSpec)
+            val height = verbDetailsLayout.measuredHeight
+
+            if (verb.selectedBlock != BLOCK_NONE) {
+                (mContext as MainActivity).runOnUiThread { verbDetailsContentLayout.visibility = View.INVISIBLE }
+            }
+
+            AnimationUtil.expandView(verbDetailsLayout, height, verbDetailsContentLayout)
+
         }
+
 
     }
 

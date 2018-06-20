@@ -1,9 +1,13 @@
 package com.fishrungames.hallyu.models.dictionary
 
+import com.google.gson.annotations.SerializedName
+
 class CompoundVerb {
 
+    @SerializedName("secondaryWordStruct")
     var mainWordStruct: TranslatedWord? = null
 
+    @SerializedName("mainWordStruct")
     var secondaryWordStruct: TranslatedWord? = null
 
     var verbose: String? = null

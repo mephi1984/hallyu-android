@@ -117,8 +117,6 @@ class DictionaryFragment : BaseFragment() {
 
             if (resultTable != null) {
                 words.addAll(dictionaryResponse.resultTable!!)
-                words.addAll(dictionaryResponse.resultTable!!)
-                words.addAll(dictionaryResponse.resultTable!!)
             }
 
             if (complexVerbResultArr != null) {
