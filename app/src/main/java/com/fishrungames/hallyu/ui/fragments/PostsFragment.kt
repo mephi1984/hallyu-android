@@ -19,8 +19,11 @@ import kotlinx.android.synthetic.main.fragment_posts.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.os.Parcelable
 
 class PostsFragment : BaseFragment() {
+
+    private var recyclerViewState: Parcelable? = null
 
     private var postCategoryAdapter: PostCategoryAdapter? = null
     private var postAdapter: PostAdapter? = null
@@ -28,7 +31,7 @@ class PostsFragment : BaseFragment() {
     private var posts: MutableList<Post> = mutableListOf()
     private var newHallyuApi: NewHallyuApi? = null
     private var categoriesIsShowing: Boolean = false
-    private var currentCategory: Int? = 1
+    private var currentCategoryId: Int? = 1
     private var barTitle: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,8 @@ class PostsFragment : BaseFragment() {
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
         newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
+
+        getPosts()
 
     }
 
@@ -72,11 +77,18 @@ class PostsFragment : BaseFragment() {
             getActivityInstance()?.supportActionBar?.title = barTitle
         }
 
+        if (getActivityInstance()?.updatePosts!!) {
+            getActivityInstance()?.updatePosts = false
+            getPosts()
+        }
+
+    }
+
+    private fun getPosts() {
         posts.clear()
         postAdapter?.notifyDataSetChanged()
         getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getPosts(currentCategory.toString()).enqueue(getPostsCallback)
-
+        newHallyuApi!!.getPosts(currentCategoryId.toString()).enqueue(getPostsCallback)
     }
 
     private fun initPostRecyclerView() {
@@ -84,6 +96,7 @@ class PostsFragment : BaseFragment() {
         postAdapter = PostAdapter(posts, context!!, object : PostAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val post: Post = posts[position]
+                recyclerViewState = postsRecyclerView.layoutManager.onSaveInstanceState()
                 getActivityInstance()?.openPostDetailsFragment(post)
             }
         })
@@ -97,7 +110,7 @@ class PostsFragment : BaseFragment() {
         postCategoryAdapter = PostCategoryAdapter(postCategories, context!!, object : PostCategoryAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val category: PostCategory = postCategories[position]
-                currentCategory = category.id
+                currentCategoryId = category.id
                 hidePostCategories()
                 posts.clear()
                 postAdapter?.notifyDataSetChanged()
@@ -151,6 +164,7 @@ class PostsFragment : BaseFragment() {
             if (response.isSuccessful) {
                 posts.addAll(postsResponse.posts!!)
                 postAdapter?.notifyDataSetChanged()
+                postsRecyclerView.layoutManager.onRestoreInstanceState(recyclerViewState)
             } else {
                 DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_serverError))
             }

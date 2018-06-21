@@ -82,6 +82,7 @@ class PostDetailsFragment : BaseFragment() {
 
         if (getActivityInstance()?.newPostComment!!) {
             getActivityInstance()?.newPostComment = false
+            getActivityInstance()?.updatePosts = true
             getActivityInstance()?.runOnUiThread { noCommentsTextView.visibility = View.INVISIBLE }
             comments.clear()
             postCommentAdapter?.notifyDataSetChanged()
