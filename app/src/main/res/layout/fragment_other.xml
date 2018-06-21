@@ -2,107 +2,97 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/colorBackground"
     android:clickable="true"
     android:focusable="true"
     >
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardView"
+    <TextView
+        android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:cardBackgroundColor="@android:color/white"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/text.otherFragment.numeralTest"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="@string/text.otherFragment.numeralTest"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/numberToTextTestButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:text="@string/text.otherFragment.numberToTextTest" />
-
-            <Button
-                android:id="@+id/textToNumberTestButton"
-                style="@style/Widget.AppCompat.Button.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-                android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-                android:text="@string/text.otherFragment.textToNumberTest" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/cardTestCardView"
+    <Button
+        android:id="@+id/numberToTextTestButton"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:cardBackgroundColor="@android:color/white"
+        android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+        android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+        android:text="@string/text.otherFragment.numberToTextTest"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView">
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-
-        <Button
-            android:id="@+id/cardTestButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-            android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-            android:text="@string/text.otherFragment.cardTest" />
-
-    </android.support.v7.widget.CardView>
-
-
-    <android.support.v7.widget.CardView
+    <Button
+        android:id="@+id/textToNumberTestButton"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:cardBackgroundColor="@android:color/white"
+        android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+        android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+        android:text="@string/text.otherFragment.textToNumberTest"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardTestCardView">
+        app:layout_constraintTop_toBottomOf="@+id/numberToTextTestButton" />
 
-        <Button
-            android:id="@+id/comicsButton"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
-            android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
-            android:text="@string/text.otherFragment.comics" />
+    <Button
+        android:id="@+id/cardTestButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+        android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+        android:text="@string/text.otherFragment.cardTest"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textToNumberTestButton" />
 
-    </android.support.v7.widget.CardView>
+    <Button
+        android:id="@+id/comicsButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:drawableEnd="@mipmap/ic_chevron_right_white_24dp"
+        android:drawableRight="@mipmap/ic_chevron_right_white_24dp"
+        android:text="@string/text.otherFragment.comics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardTestButton" />
 
 </android.support.constraint.ConstraintLayout>
