@@ -26,6 +26,7 @@ import com.vk.sdk.VKAccessToken
 import com.vk.sdk.VKCallback
 import com.vk.sdk.VKSdk
 import android.content.Intent
+import android.support.v4.app.FragmentManager
 import com.fishrungames.hallyu.models.User
 import com.fishrungames.hallyu.models.dictionary.Lesson
 import com.fishrungames.hallyu.models.responses.VKAuthorizationResponse
@@ -159,6 +160,11 @@ class MainActivity : AppCompatActivity() {
         PrefUtil.setUserToken(this, user.token!!)
     }
 
+    fun logout () {
+        PrefUtil.setUserToken(this, "")
+        replaceToPostsFragment()
+    }
+
     @SuppressLint("RestrictedApi")
     private fun BottomNavigationView.disableShiftMode() {
         val menuView = getChildAt(0) as BottomNavigationMenuView
@@ -199,6 +205,10 @@ class MainActivity : AppCompatActivity() {
                     .hideSoftInputFromWindow(this.currentFocus!!
                             .windowToken,0)
         }
+    }
+
+    fun clearBackStackFragments() {
+        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
     }
 
     private fun replaceToPostsFragment() {
@@ -366,7 +376,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 if (vkAuthorizationResponse.user != null) {
                     saveUserData(vkAuthorizationResponse.user!!)
-                    navigation.selectedItemId = R.id.navigation_profile
+                    clearBackStackFragments()
                     replaceToProfileFragment()
                 } else {
                     DialogUtil.showAlertDialog(this@MainActivity, getString(R.string.error_message_serverError))

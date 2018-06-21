@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.fishrungames.hallyu.HallyuApp
 import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Post
 import com.fishrungames.hallyu.utils.DialogUtil
@@ -58,6 +59,11 @@ class SendCommentFragment: BaseFragment() {
             }
             getActivityInstance()?.newPostComment = true
             getActivityInstance()?.hideProgressBar()
+            if (response?.code() == 400) {
+                PrefUtil.setUserToken(context!!, "")
+                DialogUtil.showAlertDialog(context!!, getString(R.string.error_message_needAuthorization))
+                return
+            }
             if (response!!.isSuccessful) {
                 getActivityInstance()?.onBackPressed()
             } else {

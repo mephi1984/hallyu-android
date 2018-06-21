@@ -3,7 +3,6 @@ package com.fishrungames.hallyu.listeners
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.widget.RecyclerView
 
-
 class ScrollListener : RecyclerView.OnScrollListener {
 
     private var buttons: MutableList<FloatingActionButton>? = null

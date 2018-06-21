@@ -28,6 +28,7 @@ class PostsFragment : BaseFragment() {
     private var posts: MutableList<Post> = mutableListOf()
     private var newHallyuApi: NewHallyuApi? = null
     private var categoriesIsShowing: Boolean = false
+    private var currentCategory: Int? = 1
     private var barTitle: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +47,7 @@ class PostsFragment : BaseFragment() {
         initPostCategoryRecyclerView()
 
         newHallyuApi = RetrofitController.getNewHallyuApi()
+        newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
 
     }
 
@@ -71,10 +73,9 @@ class PostsFragment : BaseFragment() {
         }
 
         posts.clear()
-        postCategoryAdapter?.notifyDataSetChanged()
+        postAdapter?.notifyDataSetChanged()
         getActivityInstance()?.showProgressBar()
-        newHallyuApi!!.getPostCategories().enqueue(getPostCategoriesCallback)
-        newHallyuApi!!.getPosts("1").enqueue(getPostsCallback)
+        newHallyuApi!!.getPosts(currentCategory.toString()).enqueue(getPostsCallback)
 
     }
 
@@ -96,6 +97,7 @@ class PostsFragment : BaseFragment() {
         postCategoryAdapter = PostCategoryAdapter(postCategories, context!!, object : PostCategoryAdapter.ClickListener {
             override fun onClick(position: Int) {
                 val category: PostCategory = postCategories[position]
+                currentCategory = category.id
                 hidePostCategories()
                 posts.clear()
                 postAdapter?.notifyDataSetChanged()
