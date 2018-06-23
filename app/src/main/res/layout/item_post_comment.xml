@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/commentContentLayout"
@@ -10,6 +9,24 @@
     android:clickable="true"
     android:focusable="true">
 
+    <TextView
+        android:id="@+id/commentDateTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="end"
+        android:maxLines="1"
+        android:text="DATE"
+        android:textAlignment="textEnd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/commentUserPhoto"
         android:layout_width="40dp"
@@ -17,81 +34,63 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:scaleType="fitXY"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/commentUserFirstNameTextView"
+        app:layout_constraintTop_toBottomOf="@+id/commentDateTextView"
         tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/commentUserFirstNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:text="FIRST"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/commentUserPhoto"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/commentDateTextView" />
 
     <TextView
         android:id="@+id/commentUserLastNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="4dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="LAST"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/commentUserFirstNameTextView"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/commentDateTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="textEnd"
-        android:maxLines="1"
-        android:gravity="end"
-        android:ellipsize="end"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/commentUserLastNameTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/commentUserFirstNameTextView"
+        app:layout_constraintStart_toEndOf="@+id/commentUserFirstNameTextView" />
 
     <TextView
         android:id="@+id/commentTextTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:text="commnet"
         android:textColor="@android:color/black"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/commentUserPhoto"
+        app:layout_constraintStart_toStartOf="@+id/commentUserFirstNameTextView"
         app:layout_constraintTop_toBottomOf="@+id/commentUserFirstNameTextView" />
 
     <LinearLayout
         android:id="@+id/commentImagesLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentTextTextView">
 
@@ -106,12 +105,14 @@
     </LinearLayout>
 
     <View
+        android:id="@+id/view5"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
+        android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="@color/lightGray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/commentImagesLayout" />
 

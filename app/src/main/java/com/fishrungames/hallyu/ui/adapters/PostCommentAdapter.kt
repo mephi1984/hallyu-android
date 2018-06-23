@@ -13,8 +13,10 @@ import com.fishrungames.hallyu.R
 import com.fishrungames.hallyu.models.Image
 import com.fishrungames.hallyu.models.PostComment
 import com.fishrungames.hallyu.ui.MainActivity
+import com.fishrungames.hallyu.utils.DateUtil
 import com.nostra13.universalimageloader.core.ImageLoader
 import kotlinx.android.synthetic.main.item_post_comment.view.*
+import java.util.*
 
 class PostCommentAdapter(private val comments : List<PostComment>, val context: Context, private val clickListener: ClickListener) : RecyclerView.Adapter<PostCommentAdapter.ViewHolder>() {
 

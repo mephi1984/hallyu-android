@@ -53,7 +53,6 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_POST_DETAILS = "fragmentPostDetails"
     private val FRAGMENT_LESSON = "fragmentLesson"
     private val FRAGMENT_LOGIN = "fragmentLogin"
-    private val FRAGMENT_SEND_COMMENT = "fragmentSendComment"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
     private var hallyuApi: HallyuApi? = null
@@ -320,17 +319,6 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, loginFragment, FRAGMENT_LOGIN).addToBackStack(FRAGMENT_LOGIN)
-        ft.commit()
-    }
-
-    fun openSendCommentFragment(post: Post) {
-        val sendCommentFragment = SendCommentFragment()
-        val bundle = Bundle()
-        bundle.putSerializable("post", post)
-        sendCommentFragment.arguments = bundle
-        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
-        ft.add(R.id.container, sendCommentFragment, FRAGMENT_SEND_COMMENT).addToBackStack(FRAGMENT_SEND_COMMENT)
         ft.commit()
     }
 

@@ -141,6 +141,9 @@ class EpisodePicturesFragment : BaseFragment() {
             getActivityInstance()?.showProgressBar()
             ImageLoader.getInstance().loadImage(image.imageUrl, object : SimpleImageLoadingListener() {
                 override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
+                    if (getView() == null) {
+                        return
+                    }
                     getActivityInstance()?.hideProgressBar()
                     pictureImageView.setImageBitmap(loadedImage)
                     pictureImageView.startAnimation(showPictureAnimation)

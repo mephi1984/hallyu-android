@@ -15,7 +15,7 @@
     <string name="error.message.needAuthorization">Пожалуйста, авторизуйтесь в приложении</string>
 
     <string name="barTitle.main">Корейская волна</string>
-    <string name="barTitle.numeralTest">Тест китайских числительных</string>
+    <string name="barTitle.numeralTest">Числительные</string>
     <string name="barTitle.cardTest">Словарный тест</string>
     <string name="barTitle.comics">Комиксы с переводом</string>
     <string name="barTitle.comicsEpisodes">Эпизоды</string>
@@ -44,7 +44,6 @@
     <string name="text.numeralTestFragment.ok">OK</string>
     <string name="text.numeralTestFragment.next">Далее</string>
     <string name="text.numeralTestFragment.start">Начать</string>
-    <string name="hint.numeralTestFragment.answer">Ответ</string>
     <string name="text.cardTestFragment.dictionarySize">Размер словаря:</string>
     <string name="text.cardTestFragment.oneHundredWords">100 слов</string>
     <string name="text.cardTestFragment.thousandWords">1000 слов</string>
@@ -53,11 +52,13 @@
     <string name="text.episodePicturesFragment.back">Назад</string>
     <string name="text.episodePicturesFragment.next">Далее</string>
     <string name="text.postDetailsFragment.noComments">Комментариев к данному посту нет</string>
-    <string name="text.loginFragment.vkLogin">Войти через Вконтакте</string>
-    <string name="text.sendCommentFragment.writeComment">Комментарий</string>
-    <string name="text.sendCommentFragment.send">Отправить</string>
     <string name="text.profileFragment.firstName">Имя</string>
     <string name="text.profileFragment.lastName">Фамилия</string>
     <string name="text.profileFragment.logout">Выйти</string>
+    <string name="text.loginFragment.vkLogin">Войти через Вконтакте</string>
+
+    <string name="hint.postDetailsFragment.writeComment">Комментарий</string>
+    <string name="hint.numeralTestFragment.answer">Ответ</string>
+
 
 </resources>

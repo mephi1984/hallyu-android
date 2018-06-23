@@ -24,7 +24,6 @@ import android.os.Parcelable
 class PostsFragment : BaseFragment() {
 
     private var recyclerViewState: Parcelable? = null
-
     private var postCategoryAdapter: PostCategoryAdapter? = null
     private var postAdapter: PostAdapter? = null
     private var postCategories: MutableList<PostCategory> = mutableListOf()
