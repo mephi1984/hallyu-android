@@ -32,4 +32,7 @@ interface NewHallyuApi {
     @GET("/news/getList")
     fun getPostCategories(): Call<PostCategoriesResponse>
 
+    @GET("/lesson/getList")
+    fun getLessons(): Call<LessonResponse>
+
 }

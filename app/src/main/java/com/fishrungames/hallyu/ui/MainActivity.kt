@@ -53,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     private val FRAGMENT_POST_DETAILS = "fragmentPostDetails"
     private val FRAGMENT_LESSON = "fragmentLesson"
     private val FRAGMENT_LOGIN = "fragmentLogin"
+    private val FRAGMENT_LESSONS = "fragmentLessons"
 
     private var bottomNavigationFragments: MutableList<String> = mutableListOf()
     private var hallyuApi: HallyuApi? = null
@@ -319,6 +320,14 @@ class MainActivity : AppCompatActivity() {
         val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
         ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
         ft.add(R.id.container, loginFragment, FRAGMENT_LOGIN).addToBackStack(FRAGMENT_LOGIN)
+        ft.commit()
+    }
+
+    fun openLessonsFragment() {
+        val lessonsFragment = LessonsFragment()
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        ft.setCustomAnimations(R.anim.translate_rigth_in, 0, 0, R.anim.tratslate_left_out)
+        ft.add(R.id.container, lessonsFragment, FRAGMENT_LESSONS).addToBackStack(FRAGMENT_LESSONS)
         ft.commit()
     }
 
