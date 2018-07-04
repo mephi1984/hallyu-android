@@ -22,6 +22,7 @@ class OtherFragment : BaseFragment() {
         textToNumberTestButton.setOnClickListener { getActivityInstance()?.openNumeralTestFragment(1) }
         cardTestButton.setOnClickListener { getActivityInstance()?.openCardTestFragment() }
         comicsButton.setOnClickListener { getActivityInstance()?.openComicsFragment() }
+        lessonsButton.setOnClickListener { getActivityInstance()?.openLessonsFragment() }
 
     }
 

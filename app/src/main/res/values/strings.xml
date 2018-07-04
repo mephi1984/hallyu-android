@@ -21,6 +21,7 @@
     <string name="barTitle.comicsEpisodes">Эпизоды</string>
     <string name="barTitle.login">Авторизация</string>
     <string name="barTitle.profile">Профиль</string>
+    <string name="barTitle.lessons">Уроки</string>
 
     <string name="text.dictionaryFragment.enterWord">Введите слово или фразу на Корейском языке. Сервис подберет перевод</string>
     <string name="text.dictionaryFragment.translate">Перевести</string>
@@ -33,6 +34,7 @@
     <string name="text.otherFragment.textToNumberTest">Текст → число</string>
     <string name="text.otherFragment.cardTest">Карточки-тесты</string>
     <string name="text.otherFragment.comics">Комиксы с переводом</string>
+    <string name="text.otherFragment.lessons">Уроки</string>
     <string name="text.numeralTestFragment.digitsInNumber">Разрядов в числе:\u0020</string>
     <string name="text.numeralTestFragment.number">Число:</string>
     <string name="text.numeralTestFragment.numberInKorean">Число на Корейском:</string>
